@@ -3,6 +3,7 @@ const app = express()
 const mongoose = require("mongoose")
 const config = require("./utils/config")
 const logger = require("./utils/logger")
+const productRouter = require("./controllers/product")
 
 mongoose.set("strictQuery", false);
 
@@ -14,4 +15,7 @@ mongoose.connect(config.MONGO_URI)
     logger.error("error while connecting to MongoDB", error.message)
   })
 
-module.exports = app
+app.use(express.json());
+app.use("/api/products", productRouter);
+
+module.exports = app;
