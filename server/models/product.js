@@ -16,11 +16,9 @@ const productSchema = mongoose.Schema({
   status: {
     type: String
   },
-  description: [
-    {
-      type: String
-    }
-  ],
+  description: {
+    type: Array
+  },
   image: {
     type: String,
   },
@@ -28,30 +26,8 @@ const productSchema = mongoose.Schema({
     type: mongoose.Schema.Types.Mixed,
   },
   amount: Number,
-}, { collection: "products", discriminatorKey: 'productType' }); // discriminatorKey is used to define the field that determines the schema type
+}, { collection: "products" });
 
-/*
-const singleCardProductSchema = new mongoose.Schema({
-  rarity: {
-    type: String,
-  },
-  priceVariants: [
-    {
-      price: Number,
-      condition: String,
-      amount: Number
-    }
-  ]
-});
-
-const normalProductSchema = new mongoose.Schema({
-  price: Number,
-  amount: Number
-});
-
-const Product = mongoose.model('Product', productSchema);
-const SingleCardProduct = Product.discriminator('SingleCard', singleCardProductSchema);
-const NormalProduct = Product.discriminator('Normal', normalProductSchema)*/
 
 productSchema.set("toJSON", {
   transform: (document, returnedObject) => {
@@ -60,24 +36,5 @@ productSchema.set("toJSON", {
     delete returnedObject.__v
   }
 })
-
-productSchema.pre('validate', async function (next) {
-  try {
-    const category = await this.model('Category').findById(this.category);
-    if (category.name === 'single-card') {
-      this.price = [{
-        price: Number,
-        condition: String,
-        amount: Number,
-      }];
-    } else {
-      this.price = Number
-    }
-    next();
-  } catch (error) {
-    next(error)
-  }
-})
-
 
 module.exports = mongoose.model('Product', productSchema)
