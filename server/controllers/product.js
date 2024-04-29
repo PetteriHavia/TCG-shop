@@ -2,16 +2,22 @@ const productRouter = require("express").Router()
 const Category = require("../models/category")
 const Product = require("../models/product")
 
-productRouter.get("/", async (request, response) => {
+productRouter.get("/", async (request, response, next) => {
   try {
     const products = await Product.find({})
+
+    if (products.length === 0) {
+      return response.status(404).json({ message: "No products found" })
+    }
     response.status(200).json(products)
   } catch (error) {
-    response.status(500).json({ error: error.message })
+    //response.status(500).json({ error: error.message })
+    next(error)
   }
-})
+});
 
-productRouter.post("/", async (request, response) => {
+
+productRouter.post("/", async (request, response, next) => {
 
   const body = request.body
   console.log(body)
@@ -46,8 +52,38 @@ productRouter.post("/", async (request, response) => {
     response.status(201).json(populatedProduct);
 
   } catch (error) {
-    response.status(500).json({ error: error.message })
+    //response.status(500).json({ error: error.message })
+    next(error)
   }
-})
+});
+
+productRouter.delete("/delete", async (request, response, next) => {
+  const productId = request.body.id
+  try {
+
+    const deleteProduct = await Product.findByIdAndDelete(productId)
+
+    if (!deleteProduct) {
+      response.status(404).json({ error: `Product with id: ${productId} not found` })
+      return
+    }
+
+    const category = await Category.findOneAndUpdate(
+      { products: productId },
+      { $pull: { products: productId } },
+      { new: true }
+    )
+
+    if (!category) {
+      response.status(404).json({ error: `Category not found for product: ${productId}` })
+    }
+
+    response.status(201).json(`Product id ${productId} deleted`)
+  } catch (error) {
+    //response.status(500).json({ error: error.message })
+    next(error)
+  }
+
+});
 
 module.exports = productRouter
