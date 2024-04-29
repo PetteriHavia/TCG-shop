@@ -11,7 +11,6 @@ productRouter.get("/", async (request, response, next) => {
     }
     response.status(200).json(products)
   } catch (error) {
-    //response.status(500).json({ error: error.message })
     next(error)
   }
 });
@@ -52,7 +51,6 @@ productRouter.post("/", async (request, response, next) => {
     response.status(201).json(populatedProduct);
 
   } catch (error) {
-    //response.status(500).json({ error: error.message })
     next(error)
   }
 });
@@ -80,7 +78,6 @@ productRouter.delete("/delete", async (request, response, next) => {
 
     response.status(201).json(`Product id ${productId} deleted`)
   } catch (error) {
-    //response.status(500).json({ error: error.message })
     next(error)
   }
 
