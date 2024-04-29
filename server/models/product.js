@@ -24,6 +24,12 @@ const productSchema = mongoose.Schema({
   },
   price: {
     type: mongoose.Schema.Types.Mixed,
+    validate: {
+      validator: function (value) {
+        return typeof value === 'number' || typeof value === 'object';
+      },
+      message: props => `${props.value} is not a valid type for 'price' field. It should be a number or object`
+    }
   },
   amount: Number,
 }, { collection: "products" });
