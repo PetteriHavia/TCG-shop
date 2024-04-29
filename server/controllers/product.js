@@ -14,7 +14,6 @@ productRouter.get("/", async (request, response, next) => {
   }
 });
 
-
 productRouter.post("/", async (request, response, next) => {
 
   const body = request.body
@@ -78,5 +77,26 @@ productRouter.delete("/:id", async (request, response, next) => {
   }
 
 });
+
+productRouter.patch("/:id", async (request, response, next) => {
+  const productId = request.params.id
+  const updates = request.body
+  console.log(productId)
+  try {
+
+    if (Object.keys(updates).length === 0) {
+      return response.status(404).json({ error: `No update data provided` })
+    }
+    const updateProduct = await Product.findByIdAndUpdate(productId, updates, { new: true })
+
+    if (!updateProduct) {
+      return response.status(404).json({ error: `Product with id: ${productId} not found` })
+    }
+    response.status(201).json({ message: "Product id: ${productId} updated with new data", newData: updates })
+
+  } catch (error) {
+    next(error)
+  }
+})
 
 module.exports = productRouter
