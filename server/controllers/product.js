@@ -81,7 +81,11 @@ productRouter.delete("/:id", async (request, response, next) => {
 productRouter.patch("/:id", async (request, response, next) => {
   const productId = request.params.id
   const updates = request.body
+<<<<<<< HEAD
 
+=======
+  console.log(productId)
+>>>>>>> 7a18db791a742b05a3fbf2be713213d8f5d6cedf
   try {
 
     if (Object.keys(updates).length === 0) {
