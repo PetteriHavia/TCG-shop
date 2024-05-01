@@ -4,7 +4,8 @@ const Category = require("./category")
 const productSchema = mongoose.Schema({
   productName: {
     type: String,
-    required: true
+    required: true,
+    unique: true,
   },
   category: {
     type: mongoose.Schema.Types.ObjectId,
