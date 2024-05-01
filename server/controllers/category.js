@@ -51,4 +51,37 @@ categoryRouter.post("/", async (request, response, next) => {
   }
 })
 
+categoryRouter.delete("/:id", async (request, response, next) => {
+  const categoryId = request.params.id
+  try {
+    const deleteCategory = await Category.findByIdAndDelete(categoryId)
+    if (!deleteCategory) {
+      return response.status(404).json({ error: "Category not found" })
+    }
+    return response.status(201).json(`Category ${deleteCategory.name} deleted`)
+  } catch (error) {
+    next(error)
+  }
+})
+
+categoryRouter.patch("/:id", async (request, response, next) => {
+  const categoryId = request.params.id
+  const updates = request.body
+
+  try {
+    if (Object.keys(updates).length === 0) {
+      return response.status(404).json({ error: `No update data provided` })
+    }
+
+    const updateCategory = await Category.findByIdAndUpdate(categoryId, updates, { new: true, runValidators: true })
+
+    if (!updateCategory) {
+      return response.status(404).json({ error: `Category with id: ${categoryId} not found` })
+    }
+    response.status(201).json({ message: `Category id: ${categoryId} updated with new data`, newData: updates })
+  } catch (error) {
+    next(error)
+  }
+})
+
 module.exports = categoryRouter
