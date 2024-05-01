@@ -74,8 +74,7 @@ productRouter.delete("/:id", async (request, response, next) => {
   try {
     const deleteProduct = await Product.findByIdAndDelete(productId)
     if (!deleteProduct) {
-      response.status(404).json({ error: `Product with id: ${productId} not found` })
-      return
+      return response.status(404).json({ error: `Product with id: ${productId} not found` })
     }
 
     const category = await Category.findOneAndUpdate(
