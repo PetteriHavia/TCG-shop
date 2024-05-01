@@ -2,6 +2,21 @@ const productRouter = require("express").Router()
 const Category = require("../models/category")
 const Product = require("../models/product")
 
+
+productRouter.get("/:id", async (request, response, next) => {
+  const productId = request.params.id
+  try {
+    const product = await Product.findById(productId)
+    if (!product) {
+      return response.status(400).json({ message: "Product not found" })
+    }
+    return response.status(201).json(product)
+  } catch (error) {
+    next(error)
+  }
+})
+
+
 productRouter.get("/", async (request, response, next) => {
   try {
     const products = await Product.find({})
@@ -53,7 +68,7 @@ productRouter.post("/", async (request, response, next) => {
 });
 
 productRouter.delete("/:id", async (request, response, next) => {
-  const productId = request.body.id
+  const productId = request.params.id
   try {
     const deleteProduct = await Product.findByIdAndDelete(productId)
     if (!deleteProduct) {
@@ -92,7 +107,7 @@ productRouter.patch("/:id", async (request, response, next) => {
     if (!updateProduct) {
       return response.status(404).json({ error: `Product with id: ${productId} not found` })
     }
-    response.status(201).json({ message: "Product id: ${productId} updated with new data", newData: updates })
+    response.status(201).json({ message: `Product id: ${productId} updated with new data`, newData: updates })
 
   } catch (error) {
     next(error)
