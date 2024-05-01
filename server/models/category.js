@@ -4,10 +4,12 @@ const categorySchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
+    unique: true,
   },
   products: [
     {
       type: mongoose.Schema.Types.ObjectId,
+      default: [],
       ref: "Product"
     }
   ]
