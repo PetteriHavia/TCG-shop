@@ -1,6 +1,7 @@
 const productRouter = require("express").Router()
 const Category = require("../models/category")
 const Product = require("../models/product")
+const { checkExistingDuplicate } = require("../utils/checkExistingDuplicate")
 
 
 productRouter.get("/:id", async (request, response, next) => {
@@ -21,7 +22,7 @@ productRouter.get("/", async (request, response, next) => {
   try {
     const products = await Product.find({})
     if (products.length === 0) {
-      return response.status(404).json({ message: "No products found" })
+      return response.status(404).json({ error: "No products found" })
     }
     response.status(200).json(products)
   } catch (error) {
@@ -30,14 +31,15 @@ productRouter.get("/", async (request, response, next) => {
 });
 
 productRouter.post("/", async (request, response, next) => {
-
   const body = request.body
-  console.log(body)
-
   try {
     const categoryId = await Category.findOne({ name: body.category })
     if (!categoryId) {
       return response.status(404).json({ error: "Category not found" })
+    }
+
+    if (await checkExistingDuplicate(Product, 'productName', body.productName)) {
+      return response.status(500).json({ error: `Product name: ${body.productName} already exists` })
     }
 
     const newProduct = new Product({
