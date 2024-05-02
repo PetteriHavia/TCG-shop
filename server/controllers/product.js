@@ -1,13 +1,21 @@
 const productRouter = require("express").Router()
 const Category = require("../models/category")
 const Product = require("../models/product")
+const mongoose = require("mongoose")
 const { checkExistingDuplicate } = require("../utils/checkExistingDuplicate")
 
 
-productRouter.get("/:id", async (request, response, next) => {
-  const productId = request.params.id
+productRouter.get("/:slug", async (request, response, next) => {
+  const slug = request.params.slug.replaceAll(" ", '-')
   try {
-    const product = await Product.findById(productId)
+    if (mongoose.Types.ObjectId.isValid(slug)) {
+      const product = await Product.findById(slug)
+      if (!product) {
+        return response.status(400).json({ message: "Product not found" })
+      }
+      return response.status(201).json(product)
+    }
+    const product = await Product.findOne({ slug: slug })
     if (!product) {
       return response.status(400).json({ message: "Product not found" })
     }
@@ -49,6 +57,7 @@ productRouter.post("/", async (request, response, next) => {
       status: body.status,
       description: body.description,
       image: body.image,
+      slug: body.productName.replaceAll(" ", "-"),
       price: body.price,
     })
 
