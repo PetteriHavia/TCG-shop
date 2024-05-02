@@ -23,6 +23,9 @@ const productSchema = mongoose.Schema({
   image: {
     type: String,
   },
+  slug: {
+    type: String,
+  },
   price: {
     type: mongoose.Schema.Types.Mixed,
     validate: {
