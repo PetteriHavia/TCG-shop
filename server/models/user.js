@@ -9,7 +9,7 @@ const userSchema = mongoose.Schema({
   },
   name: String,
   passwordHash: String,
-})
+}, { collection: "users" })
 
 userSchema.set("toJSON", {
   transform: (document, returnedObject) => {
