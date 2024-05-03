@@ -3,6 +3,7 @@ const Category = require("../models/category")
 const Product = require("../models/product")
 const mongoose = require("mongoose")
 const { checkExistingDuplicate } = require("../utils/checkExistingDuplicate")
+const { userExtractor } = require("../utils/middleware")
 
 
 productRouter.get("/:slug", async (request, response, next) => {
@@ -38,9 +39,14 @@ productRouter.get("/", async (request, response, next) => {
   }
 });
 
-productRouter.post("/", async (request, response, next) => {
+productRouter.post("/", userExtractor, async (request, response, next) => {
   const body = request.body
   try {
+
+    if (!request.user) {
+      return response.status(401).json({ error: "User not authenticated" })
+    }
+
     const categoryId = await Category.findOne({ name: body.category })
     if (!categoryId) {
       return response.status(404).json({ error: "Category not found" })
