@@ -20,6 +20,10 @@ mongoose.connect(config.MONGO_URI)
   })
 
 app.use(express.json());
+
+app.use(middleware.tokenExtractor)
+app.use(middleware.userExtractor)
+
 app.use("/api/categories", categoryRouter);
 app.use("/api/products", productRouter);
 app.use("/api/users", userRouter);
