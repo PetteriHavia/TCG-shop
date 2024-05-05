@@ -26,6 +26,12 @@ const productSchema = mongoose.Schema({
   slug: {
     type: String,
   },
+  amount: {
+    type: Number,
+  },
+  rarity: {
+    type: String,
+  },
   price: {
     type: mongoose.Schema.Types.Mixed,
     validate: {
@@ -35,9 +41,7 @@ const productSchema = mongoose.Schema({
       message: props => `${props.value} is not a valid type for 'price' field. It should be a number or object`
     }
   },
-  amount: Number,
 }, { collection: "products" });
-
 
 productSchema.set("toJSON", {
   transform: (document, returnedObject) => {
