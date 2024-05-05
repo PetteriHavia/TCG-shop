@@ -6,6 +6,50 @@ const { checkExistingDuplicate } = require("../utils/checkExistingDuplicate")
 const { userExtractor } = require("../utils/middleware")
 
 
+//Testing filtering
+productRouter.get("/filter", async (request, response, next) => {
+  const { availability, type, rarity, status } = request.query;
+  const filters = {}
+
+  if (availability) {
+    filters.availability = availability;
+  }
+
+  if (type) {
+    filters.type = type;
+  }
+
+  if (rarity) {
+    filters.rarity = rarity;
+  }
+
+  if (status) {
+    filters.status = status;
+  }
+
+  try {
+    const products = await Product.find(filters)
+    if (products.length === 0) {
+      return response.status(404).json({ error: "No products found" })
+    }
+    response.status(200).json(products)
+  } catch (error) {
+    next(error)
+  }
+});
+
+productRouter.get("/", async (request, response, next) => {
+  try {
+    const products = await Product.find({})
+    if (products.length === 0) {
+      return response.status(404).json({ error: "No products found" })
+    }
+    response.status(200).json(products)
+  } catch (error) {
+    next(error)
+  }
+});
+
 productRouter.get("/:slug", async (request, response, next) => {
   const slug = request.params.slug.replaceAll(" ", '-')
   try {
@@ -26,18 +70,6 @@ productRouter.get("/:slug", async (request, response, next) => {
   }
 })
 
-
-productRouter.get("/", async (request, response, next) => {
-  try {
-    const products = await Product.find({})
-    if (products.length === 0) {
-      return response.status(404).json({ error: "No products found" })
-    }
-    response.status(200).json(products)
-  } catch (error) {
-    next(error)
-  }
-});
 
 productRouter.post("/", userExtractor, async (request, response, next) => {
   const body = request.body
@@ -67,7 +99,13 @@ productRouter.post("/", userExtractor, async (request, response, next) => {
       price: body.price,
     })
 
-    console.log(newProduct)
+    if (categoryId.name !== "Single card") {
+      newProduct.amount = body.amount || 0;
+    }
+
+    if (categoryId.name === "Single card") {
+      newProduct.rarity = body.rarity
+    }
 
     const savedProduct = await newProduct.save();
 
