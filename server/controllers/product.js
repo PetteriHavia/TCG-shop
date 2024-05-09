@@ -8,23 +8,30 @@ const { userExtractor } = require("../utils/middleware")
 
 //Testing filtering
 productRouter.get("/filter", async (request, response, next) => {
-  const { availability, type, rarity, status } = request.query;
+  const { amount, category, rarity } = request.query;
   const filters = {}
 
-  if (availability) {
-    filters.availability = availability;
+  if (amount === "true") {
+    filters.amount = { $gt: 0 }
+  } else if (amount === "false") {
+    filters.amount = 0
   }
 
-  if (type) {
-    filters.type = type;
+  if (category) {
+    try {
+      const categoryObject = await Category.findOne({ name: { $regex: new RegExp('^' + category + '$', 'i') } });
+      if (categoryObject) {
+        filters.category = categoryObject._id;
+      } else {
+        return response.status(200).json([]);
+      }
+    } catch (error) {
+      return next(error);
+    }
   }
 
   if (rarity) {
     filters.rarity = rarity;
-  }
-
-  if (status) {
-    filters.status = status;
   }
 
   try {
