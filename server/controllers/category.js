@@ -42,6 +42,7 @@ categoryRouter.post("/", async (request, response, next) => {
 
     const newCategory = new Category({
       name: body.name,
+      group: body.group
     })
 
     const SavedCategory = await newCategory.save()
