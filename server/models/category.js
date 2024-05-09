@@ -6,6 +6,10 @@ const categorySchema = mongoose.Schema({
     required: true,
     unique: true,
   },
+  group: {
+    type: String,
+    required: true,
+  },
   products: [
     {
       type: mongoose.Schema.Types.ObjectId,
