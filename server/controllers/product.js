@@ -45,6 +45,21 @@ productRouter.get("/filter", async (request, response, next) => {
   }
 });
 
+
+productRouter.get("/status", async (request, response) => {
+  const { status } = request.query
+  try {
+    const productStatus = await Product.find({ status })
+    console.log(productStatus)
+    if (productStatus.length === 0) {
+      return response.status(404).json({ error: "No products found" })
+    }
+    return response.status(200).json(productStatus)
+  } catch (error) {
+    next(error)
+  }
+})
+
 productRouter.get("/", async (request, response, next) => {
   try {
     const products = await Product.find({})
