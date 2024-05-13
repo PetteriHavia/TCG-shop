@@ -1,0 +1,18 @@
+@import "navigation.scss";
+
+$poppins: "Poppins", sans-serif;
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $poppins;
+}
+
+.container-md {
+  max-width: 1200px;
+  margin: 0 auto;
+}
