@@ -1,5 +1,6 @@
 const express = require("express")
 const app = express()
+const cors = require("cors")
 const mongoose = require("mongoose")
 const config = require("./utils/config")
 const logger = require("./utils/logger")
@@ -18,9 +19,8 @@ mongoose.connect(config.MONGO_URI)
   .catch((error) => {
     logger.error("error while connecting to MongoDB", error.message)
   })
-
+app.use(cors())
 app.use(express.json());
-
 app.use(middleware.tokenExtractor)
 app.use(middleware.userExtractor)
 
