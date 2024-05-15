@@ -2,7 +2,6 @@ import { MdSearch } from "react-icons/md";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { useState } from "react";
 import { IconContext } from "react-icons/lib";
-import { MdKeyboardArrowDown } from "react-icons/md";
 import { useEffect } from "react";
 import api from "../services/api";
 import MenuItem from "./MenuItem";
@@ -43,10 +42,80 @@ const Navigation = () => {
             label: category.name,
             link: `products/${category.id}`
           }))
+        },
+        {
+          heading: "Pokemon Products",
+          submenu: groupedCategories['Pokemon Products']?.map(category => ({
+            label: category.name,
+            link: `products/${category.id}`
+          }))
+        },
+      ],
+    },
+    {
+      label: "Single Cards",
+      link: "test"
+    },
+    {
+      label: "Supplies",
+      link: `products/supplies`
+    },
+  ]
+
+  return (
+    <nav>
+      <IconContext.Provider value={{ size: "2rem" }} >
+        <div className="menu">
+          <img src="#" alt="Logo" />
+          <ul>
+            {menuItems.map((item, index) => (
+              <MenuItem key={index} item={item} />
+            ))}
+          </ul>
+        </div>
+        <div className="nav-actions">
+          <div className="nav-search">
+            <div className={`search-bar ${toggle ? "search-active" : ""}`}>
+              {toggle ? <input type="text" placeholder="Search product..." /> : null}
+              <MdSearch onClick={() => setToggle(!toggle)} />
+            </div>
+          </div>
+          <MdOutlineShoppingCart />
+        </div>
+      </IconContext.Provider>
+    </nav >
+  )
+}
+
+export default Navigation
+
+
+
+
+/*
+
+ const menuItems = [
+    {
+      label: "Pokemon",
+      children: [
+        {
+          heading: "Expansion",
+          submenu: groupedCategories.Expansion?.map(category => ({
+            label: category.name,
+            link: `products/${category.id}`
+          }))
+        },
+        {
+          heading: "Pokemon Products",
+          submenu: groupedCategories['Pokemon Products']?.map(category => ({
+            label: category.name,
+            link: `products/${category.id}`
+          }))
         }
       ],
     },
     {
+      /*
       label: "Single Cards",
       children: [
         {
@@ -62,33 +131,4 @@ const Navigation = () => {
       label: "Supplies",
       link: `products/supplies`
     },
-  ]
-
-  return (
-    <nav>
-      {groupedCategories ?
-        <IconContext.Provider value={{ size: "2rem" }} >
-          <div className="menu">
-            <img src="#" alt="Logo" />
-            <ul>
-              {menuItems.map((item, index) => (
-                <MenuItem key={index} item={item} />
-              ))}
-            </ul>
-          </div>
-          <div className="nav-actions">
-            <div className="nav-search">
-              <div className={`search-bar ${toggle ? "search-active" : ""}`}>
-                {toggle ? <input type="text" placeholder="Search product..." /> : null}
-                <MdSearch onClick={() => setToggle(!toggle)} />
-              </div>
-            </div>
-            <MdOutlineShoppingCart />
-          </div>
-        </IconContext.Provider>
-        : null}
-    </nav >
-  )
-}
-
-export default Navigation
+  ]*/
