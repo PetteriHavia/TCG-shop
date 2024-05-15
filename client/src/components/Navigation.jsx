@@ -5,6 +5,7 @@ import { IconContext } from "react-icons/lib";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { useEffect } from "react";
 import api from "../services/api";
+import MenuItem from "./MenuItem";
 
 const Navigation = () => {
   const [toggle, setToggle] = useState(false)
@@ -25,40 +26,67 @@ const Navigation = () => {
     return groups
   }, {})
 
-  /* Testing multiple ways of implementing the menu
-  
-    const createMenu = Object.keys(groupedCategories).map(groupKey => ({
-      group: groupKey,
-      test: groupedCategories[groupKey].map(category => ({
-        name: category.name,
-        link: `/products/${category.id}`
-      }))
-    }))
-  */
-
+  const menuItems = [
+    {
+      label: "Pokemon",
+      children: [
+        {
+          heading: "Expansion",
+          submenu: groupedCategories.Expansion?.map(category => ({
+            label: category.name,
+            link: `products/${category.id}`
+          }))
+        },
+        {
+          heading: "Pokemon Products",
+          submenu: groupedCategories['Pokemon Products']?.map(category => ({
+            label: category.name,
+            link: `products/${category.id}`
+          }))
+        }
+      ],
+    },
+    {
+      label: "Single Cards",
+      children: [
+        {
+          heading: "Expansion",
+          submenu: groupedCategories.Expansion?.map(category => ({
+            label: category.name,
+            link: `products/${category.id}`
+          }))
+        }
+      ],
+    },
+    {
+      label: "Supplies",
+      link: `products/supplies`
+    },
+  ]
 
   return (
     <nav>
-      <IconContext.Provider value={{ size: "2rem" }} >
-        <ul>
-          <li>
+      {groupedCategories ?
+        <IconContext.Provider value={{ size: "2rem" }} >
+          <div className="menu">
             <img src="#" alt="Logo" />
-          </li>
-          <li>Pokemon <MdKeyboardArrowDown /></li>
-          <li>Single Cards<MdKeyboardArrowDown /></li>
-          <li>Supplies</li>
-          <li>Contact</li>
-        </ul>
-        <div className="nav-actions">
-          <div className="nav-search">
-            <div className={`search-bar ${toggle ? "search-active" : ""}`}>
-              {toggle ? <input type="text" placeholder="Search product..." /> : null}
-              <MdSearch onClick={() => setToggle(!toggle)} />
-            </div>
+            <ul>
+              {menuItems.map((item, index) => (
+                <MenuItem key={index} item={item} />
+              ))}
+            </ul>
           </div>
-          <MdOutlineShoppingCart />
-        </div>
-      </IconContext.Provider>
+          <div className="nav-actions">
+            <div className="nav-search">
+              <div className={`search-bar ${toggle ? "search-active" : ""}`}>
+                {toggle ? <input type="text" placeholder="Search product..." /> : null}
+                <MdSearch onClick={() => setToggle(!toggle)} />
+              </div>
+            </div>
+            <MdOutlineShoppingCart />
+          </div>
+        </IconContext.Provider>
+        : null}
     </nav >
   )
 }

@@ -3,8 +3,12 @@ nav {
   max-width: 1200px;
   margin: 0 auto;
   justify-content: space-between;
-  align-items: center;
   padding: 2rem 0rem;
+}
+
+.menu {
+  display: flex;
+  gap: 3rem;
 }
 
 ul {
@@ -12,16 +16,10 @@ ul {
   gap: 3rem;
   list-style: none;
   font-size: 1.1rem;
-
-  li {
-    display: flex;
-    align-items: center;
-  }
 }
 
 .nav-actions {
   display: flex;
-  align-items: center;
   gap: 2rem;
 }
 
@@ -46,3 +44,38 @@ ul {
     transition: all 0.5s ease-in;
   }
 }
+
+.main-link,
+.sub-link {
+  text-decoration: none;
+  color: #162521;
+}
+
+.main-link {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.dropdown-item {
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  p {
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.sub-link {
+  font-size: 16px;
+  font-weight: 500;
+
+  &::before {
+    content: ">";
+    margin-right: 5px;
+  }
+}
+
+//Dropdown
