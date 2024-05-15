@@ -4,11 +4,13 @@ nav {
   margin: 0 auto;
   justify-content: space-between;
   padding: 2rem 0rem;
+  align-items: center;
 }
 
 .menu {
   display: flex;
   gap: 3rem;
+  align-items: center;
 }
 
 ul {
@@ -16,11 +18,32 @@ ul {
   gap: 3rem;
   list-style: none;
   font-size: 1.1rem;
+  align-items: center;
+
+  li {
+    padding: 0.5rem 0rem;
+    position: relative;
+
+    &:hover .dropdown-container {
+      display: block;
+    }
+
+    &:hover::after {
+      position: absolute;
+      bottom: 0;
+      content: "";
+      width: 100%;
+      background-color: #4f7cac;
+      height: 3px;
+      border-radius: 8px;
+    }
+  }
 }
 
 .nav-actions {
   display: flex;
   gap: 2rem;
+  align-items: center;
 }
 
 .search-bar {
@@ -45,10 +68,17 @@ ul {
   }
 }
 
+.nav-item-content {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
 .main-link,
 .sub-link {
   text-decoration: none;
   color: #162521;
+  display: flex;
+  align-items: center;
 }
 
 .main-link {
@@ -56,10 +86,25 @@ ul {
   font-size: 1.1rem;
 }
 
+.dropdown-container {
+  display: none;
+}
+
+.dropdown {
+  padding: 1rem;
+  position: absolute;
+  top: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(200px, 1fr));
+  gap: 1rem;
+  z-index: 100;
+}
+
 .dropdown-item {
-  padding-top: 1rem;
+  gap: 0.5rem;
   display: flex;
   flex-direction: column;
+
   p {
     font-size: 16px;
     font-weight: 600;
