@@ -2,7 +2,6 @@ import { NavLink, Link } from "react-router-dom"
 import { MdKeyboardArrowDown } from "react-icons/md";
 
 const MenuItem = ({ item }) => {
-  console.log(item)
   return (
     <li>
       <div className="nav-item-content">
