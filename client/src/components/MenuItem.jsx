@@ -1,9 +1,13 @@
 import { NavLink, Link } from "react-router-dom"
 import { MdKeyboardArrowDown } from "react-icons/md";
+import { useState } from "react";
 
-const MenuItem = ({ item }) => {
+const MenuItem = ({ item, index, onItemClick, activeIndex }) => {
+
+
+
   return (
-    <li>
+    <li onClick={onItemClick} className={index === activeIndex ? "active" : ""}>
       <div className="nav-item-content">
         <NavLink to="#" className="main-link">
           {item.label} {item.children && <MdKeyboardArrowDown size="25px" />}
