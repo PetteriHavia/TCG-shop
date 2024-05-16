@@ -1,22 +1,19 @@
 import { MdSearch } from "react-icons/md";
 import { MdOutlineShoppingCart } from "react-icons/md";
+import { MdMenu } from "react-icons/md";
+import { MdClose } from "react-icons/md";
 import { useState } from "react";
 import { IconContext } from "react-icons/lib";
-import { useEffect } from "react";
-import api from "../services/api";
 import MenuItem from "./MenuItem";
+import { useGetAllCategoriesQuery } from '../redux/reducers/apiSlice'
 
 const Navigation = () => {
   const [toggle, setToggle] = useState(false)
-  const [categories, setCategories] = useState([])
+  const [isOpen, setIsOpen] = useState(false)
 
-  useEffect(() => {
-    api.getCategories()
-      .then((data) => (
-        setCategories(data)))
-  }, [])
+  const { data: categoriesData, isLoading } = useGetAllCategoriesQuery()
 
-  const groupedCategories = categories.reduce((groups, category) => {
+  const groupedCategories = categoriesData?.reduce((groups, category) => {
     const groupKey = category.group
     if (!groups[groupKey]) {
       groups[groupKey] = []
@@ -25,27 +22,28 @@ const Navigation = () => {
     return groups
   }, {})
 
+
   const menuItems = [
     {
       label: "Pokemon",
       children: [
         {
           heading: "Expansion",
-          submenu: groupedCategories.Expansion?.map(category => ({
+          submenu: groupedCategories?.Expansion?.map(category => ({
             label: category.name,
             link: `products/${category.id}`
           }))
         },
         {
           heading: "Pokemon Products",
-          submenu: groupedCategories['Pokemon Products']?.map(category => ({
+          submenu: groupedCategories?.['Pokemon Products']?.map(category => ({
             label: category.name,
             link: `products/${category.id}`
           }))
         },
         {
           heading: "Pokemon Products",
-          submenu: groupedCategories['Pokemon Products']?.map(category => ({
+          submenu: groupedCategories?.['Pokemon Products']?.map(category => ({
             label: category.name,
             link: `products/${category.id}`
           }))
@@ -54,7 +52,15 @@ const Navigation = () => {
     },
     {
       label: "Single Cards",
-      link: "test"
+      children: [
+        {
+          heading: "Expansion",
+          submenu: groupedCategories?.Expansion?.map(category => ({
+            label: category.name,
+            link: `products/${category.id}`
+          }))
+        }
+      ],
     },
     {
       label: "Supplies",
@@ -66,12 +72,16 @@ const Navigation = () => {
     <nav>
       <IconContext.Provider value={{ size: "2rem" }} >
         <div className="menu">
+          <MdMenu className="menu-icon" onClick={() => setIsOpen(true)} />
           <img src="#" alt="Logo" />
-          <ul>
-            {menuItems.map((item, index) => (
-              <MenuItem key={index} item={item} />
-            ))}
-          </ul>
+          {!isLoading ?
+            <ul className={isOpen ? "" : "hidden"}>
+              {isOpen ? <li className="close-icon"><MdClose onClick={() => setIsOpen(false)} /></li> : null}
+              {menuItems.map((item, index) => (
+                <MenuItem key={index} item={item} />
+              ))}
+            </ul>
+            : null}
         </div>
         <div className="nav-actions">
           <div className="nav-search">
