@@ -6,10 +6,26 @@ import { useState } from "react";
 import { IconContext } from "react-icons/lib";
 import MenuItem from "./MenuItem";
 import { useGetAllCategoriesQuery } from '../redux/reducers/apiSlice'
+import { useRef, useEffect } from "react";
 
 const Navigation = () => {
   const [toggle, setToggle] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(null)
+  const menuRef = useRef(null)
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setIsOpen(false)
+        setActiveIndex(null)
+      }
+    }
+    document.addEventListener("click", handleClickOutside)
+    return () => {
+      document.removeEventListener("click", handleClickOutside)
+    }
+  }, [])
 
   const { data: categoriesData, isLoading } = useGetAllCategoriesQuery()
 
@@ -68,17 +84,21 @@ const Navigation = () => {
     },
   ]
 
+  const handleMenuIndex = (index) => {
+    setActiveIndex(index === activeIndex ? null : index)
+  }
+
   return (
     <nav>
       <IconContext.Provider value={{ size: "2rem" }} >
-        <div className="menu">
+        <div className="menu" ref={menuRef}>
           <MdMenu className="menu-icon" onClick={() => setIsOpen(true)} />
           <img src="#" alt="Logo" />
           {!isLoading ?
             <ul className={isOpen ? "" : "hidden"}>
               {isOpen ? <li className="close-icon"><MdClose onClick={() => setIsOpen(false)} /></li> : null}
               {menuItems.map((item, index) => (
-                <MenuItem key={index} item={item} />
+                <MenuItem key={index} item={item} index={index} activeIndex={activeIndex} onItemClick={() => handleMenuIndex(index)} />
               ))}
             </ul>
             : null}
@@ -98,47 +118,3 @@ const Navigation = () => {
 }
 
 export default Navigation
-
-
-
-
-/*
-
- const menuItems = [
-    {
-      label: "Pokemon",
-      children: [
-        {
-          heading: "Expansion",
-          submenu: groupedCategories.Expansion?.map(category => ({
-            label: category.name,
-            link: `products/${category.id}`
-          }))
-        },
-        {
-          heading: "Pokemon Products",
-          submenu: groupedCategories['Pokemon Products']?.map(category => ({
-            label: category.name,
-            link: `products/${category.id}`
-          }))
-        }
-      ],
-    },
-    {
-      /*
-      label: "Single Cards",
-      children: [
-        {
-          heading: "Expansion",
-          submenu: groupedCategories.Expansion?.map(category => ({
-            label: category.name,
-            link: `products/${category.id}`
-          }))
-        }
-      ],
-    },
-    {
-      label: "Supplies",
-      link: `products/supplies`
-    },
-  ]*/
