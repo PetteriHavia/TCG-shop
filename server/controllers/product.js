@@ -144,19 +144,20 @@ productRouter.post("/", userExtractor, async (request, response, next) => {
 productRouter.delete("/:id", async (request, response, next) => {
   const productId = request.params.id
   try {
-    const deleteProduct = await Product.findByIdAndDelete(productId)
-    if (!deleteProduct) {
+    const product = await Product.findById(productId)
+    if (!product) {
       return response.status(404).json({ error: `Product with id: ${productId} not found` })
     }
 
-    const category = await Category.findOneAndUpdate(
-      { products: productId },
-      { $pull: { products: productId } },
-      { new: true }
-    )
+    const categoryIds = product.categories
 
-    if (!category) {
-      response.status(404).json({ error: `Category not found for product: ${productId}` })
+    for (const categoryId of categoryIds) {
+      await Category.findByIdAndUpdate(categoryId, { $pull: { products: productId } })
+    }
+
+    const deleteProduct = await Product.findByIdAndDelete(productId);
+    if (!deleteProduct) {
+      return response.status(404).json({ error: `Product with id: ${productId} not found` })
     }
 
     response.status(201).json(`Product id ${productId} deleted`)
