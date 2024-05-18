@@ -5,12 +5,13 @@ const productSchema = mongoose.Schema({
   productName: {
     type: String,
     required: true,
-    unique: true,
   },
-  category: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
-  },
+  categories: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+    }
+  ],
   discount: {
     type: Number,
   },
@@ -31,6 +32,9 @@ const productSchema = mongoose.Schema({
   },
   rarity: {
     type: String,
+  },
+  setName: {
+    type: String
   },
   price: {
     type: mongoose.Schema.Types.Mixed,

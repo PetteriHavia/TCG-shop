@@ -101,42 +101,39 @@ productRouter.post("/", userExtractor, async (request, response, next) => {
       return response.status(401).json({ error: "User not authenticated" })
     }
 
-    const categoryId = await Category.findOne({ name: body.category })
-    if (!categoryId) {
-      return response.status(404).json({ error: "Category not found" })
-    }
-
-    if (await checkExistingDuplicate(Product, 'productName', body.productName)) {
-      return response.status(500).json({ error: `Product name: ${body.productName} already exists` })
+    const categoryObject = await Category.find({ name: { $in: body.categories } })
+    if (categoryObject.length === 0) {
+      return response.status(404).json({ error: "No valid categories found" })
     }
 
     const newProduct = new Product({
       productName: body.productName,
-      category: categoryId._id,
+      categories: categoryObject.map(c => c._id),
       discount: body.discount,
       status: body.status,
-      description: body.description,
       image: body.image,
       slug: body.productName.replaceAll(" ", "-"),
       price: body.price,
     })
 
-    if (categoryId.name !== "Single card") {
-      newProduct.amount = body.amount || 0;
+    if (!categoryObject.name !== "Single card") {
+      newProduct.amount = body.amount || 0
+      newProduct.description = body.description
     }
 
-    if (categoryId.name === "Single card") {
-      newProduct.rarity = body.rarity
+    if (!categoryObject.name === "Single card") {
+      newProduct.rarity = body.rarity,
+        newProduct.setName = body.setName
     }
 
     const savedProduct = await newProduct.save();
 
-    //Populate product category section with category name
-    const populatedProduct = await savedProduct.populate("category", { name: 1 })
+    for (const category of categoryObject) {
+      category.products = category.products.concat(savedProduct._id)
+      await category.save()
+    }
 
-    categoryId.products = categoryId.products.concat(savedProduct._id)
-    await categoryId.save()
-
+    const populatedProduct = await savedProduct.populate("categories", { name: 1 })
     response.status(201).json(populatedProduct);
 
   } catch (error) {
@@ -178,12 +175,38 @@ productRouter.patch("/:id", async (request, response, next) => {
     if (Object.keys(updates).length === 0) {
       return response.status(404).json({ error: `No update data provided` })
     }
-    const updateProduct = await Product.findByIdAndUpdate(productId, updates, { new: true, runValidators: true })
 
-    if (!updateProduct) {
-      return response.status(404).json({ error: `Product with id: ${productId} not found` })
+    const existingProduct = await Product.findById(productId)
+
+    if (!existingProduct) {
+      return response.status(404).json({ error: `Product with id: ${productId} not found` });
     }
-    response.status(201).json({ message: `Product id: ${productId} updated with new data`, newData: updates })
+
+    if (updates.categories) {
+      const newCategoryObjects = await Category.find({ name: { $in: updates.categories } });
+      if (!newCategoryObjects) {
+        return response.status(404).json({ error: `No valid categories found` });
+      }
+
+      const oldCategoryIds = existingProduct.categories.map(c => c.toString())
+      const newCategoryIds = newCategoryObjects.map(c => c._id.toString())
+
+      for (const oldCategoryId of oldCategoryIds) {
+        if (!newCategoryIds.includes(oldCategoryId)) {
+          await Category.findByIdAndUpdate(oldCategoryId, { $pull: { products: productId } });
+        }
+      }
+
+      for (const newCategoryId of newCategoryIds)
+        if (!oldCategoryIds.includes(newCategoryId)) {
+          await Category.findByIdAndUpdate(newCategoryId, { $addToSet: { products: productId } });
+        }
+
+      updates.categories = newCategoryIds
+    }
+    const updateProduct = await Product.findByIdAndUpdate(productId, updates, { new: true, runValidators: true });
+
+    response.status(201).json({ message: `Product id: ${productId} updated with new data`, newData: updateProduct })
 
   } catch (error) {
     next(error)
