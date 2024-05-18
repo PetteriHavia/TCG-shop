@@ -37,8 +37,8 @@ const errorHandler = (error, request, response, next) => {
   } else if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message });
   } else if (error.name === "MongoServerError" && error.code === 11000) {
-    //const fieldName = Object.keys(error.keyPattern)[0];
-    return response.status(400).json({ error: `Name already exists` });
+    const fieldName = Object.keys(error.keyPattern)[0];
+    return response.status(400).json({ error: `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} already exists` });
   } else if (error.name === 'JsonWebTokenError') {
     return response.status(400).json({ error: 'Token missing or invalid' });
   } else if (error.name === 'TokenExpiredError') {
