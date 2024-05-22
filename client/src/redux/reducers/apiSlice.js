@@ -6,8 +6,11 @@ export const shopApi = createApi({
   endpoints: (builder) => ({
     getAllCategories: builder.query({
       query: () => "categories",
+    }),
+    getProductStatus: builder.query({
+      query: (status) => `products/status?status=${status}?`
     })
   })
 })
 
-export const { useGetAllCategoriesQuery } = shopApi
+export const { useGetAllCategoriesQuery, useGetProductStatusQuery } = shopApi

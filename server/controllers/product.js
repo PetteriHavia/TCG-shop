@@ -2,7 +2,6 @@ const productRouter = require("express").Router()
 const Category = require("../models/category")
 const Product = require("../models/product")
 const mongoose = require("mongoose")
-const { checkExistingDuplicate } = require("../utils/checkExistingDuplicate")
 const { userExtractor } = require("../utils/middleware")
 
 
@@ -46,10 +45,10 @@ productRouter.get("/filter", async (request, response, next) => {
 });
 
 
-productRouter.get("/status", async (request, response) => {
+productRouter.get("/status", async (request, response, next) => {
   const { status } = request.query
   try {
-    const productStatus = await Product.find({ status })
+    const productStatus = await Product.aggregate([{ $match: { status: { $regex: new RegExp(`^${status}$`, 'i') } } }]).limit(4)
     console.log(productStatus)
     if (productStatus.length === 0) {
       return response.status(404).json({ error: "No products found" })
