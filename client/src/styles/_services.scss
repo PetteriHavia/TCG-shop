@@ -1,0 +1,39 @@
+.services {
+  display: flex;
+  justify-content: space-between;
+}
+
+.services-card {
+  display: flex;
+  align-items: center;
+
+  .card-text {
+    font-size: 1.2rem;
+  }
+
+  svg {
+    color: $ice-blue;
+    font-size: 5rem;
+  }
+}
+
+@media (max-width: 1000px) {
+  .services {
+    flex-wrap: wrap;
+  }
+
+  .services-card {
+    flex-direction: column;
+    width: 50%;
+    padding-bottom: 2rem;
+  }
+  .card-text {
+    text-align: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .services-card {
+    width: 100%;
+  }
+}
