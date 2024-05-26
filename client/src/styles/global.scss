@@ -1,5 +1,6 @@
 $poppins: "Poppins", sans-serif;
 $yellow: #ffc800;
+$ice-blue: #34e5ff;
 
 * {
   padding: 0;
@@ -16,7 +17,12 @@ body {
   margin: 0 auto;
 }
 
+section {
+  padding: 3rem 1rem;
+}
+
 @import "./variables";
 @import "navigation.scss";
 @import "./hero";
 @import "./product-showcase";
+@import "./services";
