@@ -38,7 +38,7 @@ button {
 }
 
 @media (max-width: 1000px) {
-  .container-md {
+  header .container-md {
     flex-direction: column-reverse;
     align-items: center;
     gap: 2rem;
