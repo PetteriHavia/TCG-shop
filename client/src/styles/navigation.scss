@@ -13,7 +13,7 @@ nav {
   align-items: center;
 }
 
-ul {
+nav ul {
   display: flex;
   gap: 3rem;
   list-style: none;
@@ -28,6 +28,16 @@ ul {
     &.active .dropdown-container {
       display: block;
     }
+  }
+
+  li:not(.close-icon):hover::after {
+    position: absolute;
+    bottom: 0;
+    content: "";
+    width: 100%;
+    background-color: #4f7cac;
+    height: 3px;
+    border-radius: 8px;
   }
 }
 
@@ -46,16 +56,6 @@ ul {
       padding: 0.2rem;
     }
   }
-}
-
-li:not(.close-icon):hover::after {
-  position: absolute;
-  bottom: 0;
-  content: "";
-  width: 100%;
-  background-color: #4f7cac;
-  height: 3px;
-  border-radius: 8px;
 }
 
 .nav-actions {
@@ -141,7 +141,7 @@ li:not(.close-icon):hover::after {
 }
 
 @media (max-width: 992px) {
-  ul {
+  nav ul {
     position: absolute;
     background-color: #4f7cac;
     display: block;
