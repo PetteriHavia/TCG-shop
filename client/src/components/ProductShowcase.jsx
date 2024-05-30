@@ -20,7 +20,7 @@ const ProductShowcase = ({ products, header }) => {
               <div className="product-details">
                 <Link to={`products/${item.productName.toLowerCase()}`}><p>{item.productName}</p></Link>
                 {item.discount > 0 ?
-                  <h4><span>{getPrice(item)} €</span>{getDiscountedPrice(getPrice(item), item.discount)} €</h4>
+                  <h4><span className="discount-span">{getPrice(item)} €</span>{getDiscountedPrice(getPrice(item), item.discount)} €</h4>
                   :
                   <h4>{getPrice(item)} €</h4>
                 }

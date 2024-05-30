@@ -13,7 +13,6 @@ const ProductVersionList = ({ product, handleSetCurrentItem, discount }) => {
     }
   }
 
-
   return (
     <div className="column">
       <h2>Version</h2>
@@ -23,7 +22,7 @@ const ProductVersionList = ({ product, handleSetCurrentItem, discount }) => {
             <input type="radio" name="item_price" onChange={() => handleSetCurrentItem(item.price, item.amount)} defaultChecked={index === 0} />
             <div className="condition">
               {discount > 0 ?
-                <p>{getDiscountedPrice(item.price, discount)}€ <span>(InStock: {item.amount})</span></p>
+                <p><span className="discount-span">{item.price}€</span>{getDiscountedPrice(item.price, discount)}€ <span>(InStock: {item.amount})</span></p>
                 :
                 <p>{item.price}€ <span>(InStock: {item.amount})</span></p>
               }

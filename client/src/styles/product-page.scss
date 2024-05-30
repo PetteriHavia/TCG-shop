@@ -31,7 +31,7 @@
 }
 
 .product-layout {
-  max-width: 500px;
+  max-width: 600px;
   width: 100%;
 }
 
@@ -57,15 +57,31 @@
     .product-item {
       display: flex;
       align-items: baseline;
+      justify-content: space-evenly;
       gap: 1rem;
       padding-bottom: 1.5rem;
     }
   }
 }
 
-.condition span {
+.discount-information span span:nth-of-type(1) {
+  background-color: $yellow;
   padding: 0rem 0.5rem;
-  border-radius: 8px;
+  margin: 0rem 0.3rem;
+}
+
+.condition {
+  & p:nth-last-of-type(1) {
+    display: flex;
+    justify-content: space-between;
+    span {
+      width: 100%;
+      max-width: 100px;
+      display: block;
+      text-align: center;
+      padding: 0rem 1rem;
+    }
+  }
 }
 
 .product-description {

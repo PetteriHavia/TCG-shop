@@ -23,6 +23,13 @@ footer {
   padding: 3rem 1rem;
 }
 
+.discount-span {
+  color: gray;
+  margin-right: 0.5rem;
+  font-size: 1rem;
+  text-decoration: line-through;
+}
+
 @import "./variables";
 @import "./navigation.scss";
 @import "./hero";
