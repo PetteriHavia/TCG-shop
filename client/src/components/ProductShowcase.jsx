@@ -1,8 +1,8 @@
 
 import placeholderIMG from '../assets/images/products-header.png'
+import { Link } from 'react-router-dom'
 
 const ProductShowcase = ({ products, header }) => {
-
   const getPrice = (product) => {
     if (Array.isArray(product.price)) {
       return product.price.length > 0 ? product.price[0].price : null
@@ -32,7 +32,7 @@ const ProductShowcase = ({ products, header }) => {
               {item.discount > 0 ? <p className="discount-sticker">-{item.discount}%</p> : null}
               <img src={placeholderIMG} alt="product image" />
               <div className="product-details">
-                <p>{item.productName}</p>
+                <Link to={`products/${item.productName}`}><p>{item.productName}</p></Link>
                 {item.discount > 0 ?
                   <h4><span>{getPrice(item)} €</span>{getDicountedPrice(getPrice(item), item.discount)} €</h4>
                   :
