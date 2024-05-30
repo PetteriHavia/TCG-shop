@@ -2,6 +2,8 @@ import { useParams } from "react-router-dom"
 import { useGetSingleProductQuery } from "../redux/reducers/apiSlice";
 import placeholderIMG from '../assets/images/products-header.png'
 import { useEffect, useState } from "react";
+import ProductVersionList from "../components/ProductVersionList";
+import { getDiscountedPrice } from "../utils/calculateDicount";
 
 const ProductPage = () => {
 
@@ -47,54 +49,51 @@ const ProductPage = () => {
     setProductAmount(1)
   }
 
+  if (isLoading) {
+    return (
+      <div className="container-md">
+        <p>Loading...</p>
+      </div>
+    )
+  }
+
   return (
     <section>
       <div className="container-md">
-        {isLoading ?
-          null
-          :
-          <div className="product-container">
-            <img src={placeholderIMG} alt="product image" />
-            <div className="product-layout">
-              <div className="product-info">
-                <div className="column">
-                  <h2>{product.productName}</h2>
-                  <h3>{currentItemPrice} €</h3>
-                  <div className="product-amount-control">
-                    <button onClick={() => handleControl("minus")}>-</button>
-                    {productAmount}
-                    <button onClick={() => handleControl("plus")}>+</button>
-                  </div>
-                  {product.rarity && <p>Rarity: {product.rarity}</p>}
-                  {product.setName && <p>Set: {product.setName}</p>}
+        <div className="product-container">
+          <img src={placeholderIMG} alt="product image" />
+          <div className="product-layout">
+            <div className="product-info">
+              <div className="column">
+                <h2>{product.productName}</h2>
+                {product.discount > 0 ?
+                  <h3>{getDiscountedPrice(currentItemPrice, product.discount)}€</h3>
+                  :
+                  <h3>{currentItemPrice}€</h3>
+                }
+                {product.amount && <h3>{product.amount} in Stock</h3>}
+                <div className="product-amount-control">
+                  <button onClick={() => handleControl("minus")}>-</button>
+                  <p>{productAmount}</p>
+                  <button onClick={() => handleControl("plus")}>+</button>
                 </div>
-                {product.categories.some(category => category.name === "Single card") ?
-                  <div className="column">
-                    <h2>Version</h2>
-                    <ul>
-                      {product.price.map((item, index) => (
-                        <li key={item.condition} className="product-price">
-                          <input type="radio" name="item_price" onChange={() => handleSetCurrentItem(item.price, item.amount)} defaultChecked={index === 0} />
-                          <div className="test">
-                            <p>{item.price}€ <span>(InStock: {item.amount})</span></p>
-                            <p>Condition: {item.condition}</p>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  : null}
+                {product.rarity && <p>Rarity: {product.rarity}</p>}
+                {product.setName && <p>Set: {product.setName}</p>}
+                <button>Add To Cart</button>
               </div>
-              {product.description.length > 0 &&
-                <div className="product-description">
-                  {product.description.map((text, index) => (
-                    <p key={index}>{text}</p>
-                  ))}
-                </div>
-              }
+              {product.categories.some(category => category.name === "Single card") ?
+                <ProductVersionList discount={product.discount} product={product.price} handleSetCurrentItem={handleSetCurrentItem} />
+                : null}
             </div>
           </div>
-        }
+        </div>
+        {product.description && product.description.length > 0 && (
+          <div className="product-description">
+            {product.description.map((text, index) => (
+              <p key={index}>{text}</p>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )
