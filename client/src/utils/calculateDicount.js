@@ -6,6 +6,11 @@ export const getPrice = (product) => {
   return product.price.toFixed(2)
 }
 
+export const getDiscountSum = (price, discount) => {
+  const sum = price / 100 * discount
+  return sum.toFixed(2)
+}
+
 export const getDiscountedPrice = (price, discount) => {
   const discountedPrice = price - (discount * price / 100).toFixed(2)
   return discountedPrice

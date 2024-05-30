@@ -3,7 +3,7 @@ import { useGetSingleProductQuery } from "../redux/reducers/apiSlice";
 import placeholderIMG from '../assets/images/products-header.png'
 import { useEffect, useState } from "react";
 import ProductVersionList from "../components/ProductVersionList";
-import { getDiscountedPrice } from "../utils/calculateDicount";
+import { getDiscountedPrice, getDiscountSum } from "../utils/calculateDicount";
 
 const ProductPage = () => {
 
@@ -67,7 +67,10 @@ const ProductPage = () => {
               <div className="column">
                 <h2>{product.productName}</h2>
                 {product.discount > 0 ?
-                  <h3>{getDiscountedPrice(currentItemPrice, product.discount)}€</h3>
+                  <div className="discount-information">
+                    <h3>{getDiscountedPrice(currentItemPrice, product.discount)}€</h3>
+                    <span>Save: <span>{product.discount}% </span><span>({getDiscountSum(currentItemPrice, product.discount)}€)</span></span>
+                  </div>
                   :
                   <h3>{currentItemPrice}€</h3>
                 }
