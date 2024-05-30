@@ -81,11 +81,13 @@ productRouter.get("/:slug", async (request, response, next) => {
       }
       return response.status(201).json(product)
     }
-    const product = await Product.findOne({ slug: slug })
+    const product = await Product.findOne({ slug: { $regex: new RegExp(`^${slug}$`, 'i') } })
     if (!product) {
       return response.status(400).json({ message: "Product not found" })
     }
-    return response.status(201).json(product)
+
+    const populatedProduct = await product.populate("categories", { name: 1 })
+    return response.status(201).json(populatedProduct)
   } catch (error) {
     next(error)
   }
