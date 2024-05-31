@@ -4,6 +4,7 @@ import placeholderIMG from '../assets/images/products-header.png'
 import { useEffect, useState } from "react";
 import ProductVersionList from "../components/ProductVersionList";
 import { getDiscountedPrice, getDiscountSum } from "../utils/calculateDicount";
+import Breadcrumbs from "../components/Breadcrumbs";
 
 const ProductPage = () => {
 
@@ -60,6 +61,7 @@ const ProductPage = () => {
   return (
     <section>
       <div className="container-md">
+        <Breadcrumbs params={identifier} />
         <div className="product-container">
           <img src={placeholderIMG} alt="product image" />
           <div className="product-layout">
@@ -72,7 +74,7 @@ const ProductPage = () => {
                     <span>Save: <span>{product.discount}% </span><span>({getDiscountSum(currentItemPrice, product.discount)}€)</span></span>
                   </div>
                   :
-                  <h3>{currentItemPrice}€</h3>
+                  <h3>{currentItemPrice.toFixed(2)}€</h3>
                 }
                 {product.amount && <h3>{product.amount} in Stock</h3>}
                 <div className="product-amount-control">
