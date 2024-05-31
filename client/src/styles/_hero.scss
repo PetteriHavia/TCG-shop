@@ -8,26 +8,28 @@ header {
   }
 }
 
-.column {
-  flex-basis: 50%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  gap: 2rem;
-  justify-content: center;
+.header {
+  .column {
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
 
-  img {
-    width: 100%;
+    &:nth-child(1) img {
+      max-width: 400px;
+    }
+
+    &:nth-child(2) img {
+      align-self: flex-end;
+      width: 90%;
+    }
+
+    img {
+      width: 100%;
+    }
   }
-}
-
-.column:nth-child(1) img {
-  max-width: 400px;
-}
-
-.column:nth-child(2) img {
-  align-self: flex-end;
-  width: 90%;
 }
 
 button {
@@ -51,11 +53,11 @@ button {
     h1 {
       max-width: 650px;
     }
-  }
 
-  .column:nth-child(2) img {
-    align-self: center;
-    width: 100%;
+    &:nth-child(2) img {
+      align-self: center;
+      width: 100%;
+    }
   }
 
   button {

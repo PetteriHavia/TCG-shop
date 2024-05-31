@@ -4,7 +4,7 @@ import productLogo from "../assets/images/sv5-logo.png"
 const Hero = () => {
   return (
     <header>
-      <div className="container-md">
+      <div className="container-md header">
         <div className="column">
           <img src={productLogo} alt="product logo" />
           <h1>SCARLET & VIOLET TEMPORAL FORCES AVAILABLE NOW</h1>

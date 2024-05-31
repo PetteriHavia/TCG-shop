@@ -9,8 +9,11 @@ export const shopApi = createApi({
     }),
     getProductStatus: builder.query({
       query: (status) => `products/status?status=${status}?`
-    })
+    }),
+    getSingleProduct: builder.query({
+      query: (id) => `products/${id}`
+    }),
   })
 })
 
-export const { useGetAllCategoriesQuery, useGetProductStatusQuery } = shopApi
+export const { useGetAllCategoriesQuery, useGetProductStatusQuery, useGetSingleProductQuery } = shopApi
