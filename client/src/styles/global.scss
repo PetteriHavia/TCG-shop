@@ -2,6 +2,7 @@ $poppins: "Poppins", sans-serif;
 $yellow: #ffc800;
 $ice-blue: #34e5ff;
 $deep-blue: #4f7cac;
+$metal-black: #162521;
 
 * {
   padding: 0;
@@ -28,6 +29,31 @@ footer {
   margin-right: 0.5rem;
   font-size: 1rem;
   text-decoration: line-through;
+}
+
+.breadcrumbs {
+  display: flex;
+  gap: 1rem;
+  padding: 0rem 0rem 2rem 0rem;
+
+  .crumb {
+    text-transform: capitalize;
+    font-style: italic;
+
+    a {
+      text-decoration: none;
+      color: $metal-black;
+    }
+
+    &::after {
+      content: ">";
+      margin-left: 15px;
+    }
+
+    &:last-child::after {
+      display: none;
+    }
+  }
 }
 
 @import "./variables";
