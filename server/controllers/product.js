@@ -81,11 +81,13 @@ productRouter.get("/:slug", async (request, response, next) => {
       }
       return response.status(201).json(product)
     }
-    const product = await Product.findOne({ slug: slug })
+    const product = await Product.findOne({ slug: { $regex: new RegExp(`^${slug}$`, 'i') } })
     if (!product) {
       return response.status(400).json({ message: "Product not found" })
     }
-    return response.status(201).json(product)
+
+    const populatedProduct = await product.populate("categories", { name: 1 })
+    return response.status(201).json(populatedProduct)
   } catch (error) {
     next(error)
   }
@@ -105,6 +107,8 @@ productRouter.post("/", userExtractor, async (request, response, next) => {
       return response.status(404).json({ error: "No valid categories found" })
     }
 
+    const isSingleCard = categoryObject.some(category => category.name === "Single card")
+
     const newProduct = new Product({
       productName: body.productName,
       categories: categoryObject.map(c => c._id),
@@ -115,12 +119,11 @@ productRouter.post("/", userExtractor, async (request, response, next) => {
       price: body.price,
     })
 
-    if (!categoryObject.name !== "Single card") {
+    if (!isSingleCard) {
       newProduct.amount = body.amount || 0
       newProduct.description = body.description
     }
-
-    if (!categoryObject.name === "Single card") {
+    if (isSingleCard) {
       newProduct.rarity = body.rarity,
         newProduct.setName = body.setName
     }
