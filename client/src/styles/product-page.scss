@@ -30,6 +30,33 @@
   }
 }
 
+.add-to-cart {
+  position: relative;
+
+  span {
+    position: absolute;
+    overflow: hidden;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    transition: 0.1s ease;
+    border-radius: 8px;
+    background-color: $metal-black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      font-size: 2rem;
+    }
+  }
+
+  &:hover span {
+    height: 100%;
+  }
+}
+
 .product-layout {
   max-width: 600px;
   width: 100%;
