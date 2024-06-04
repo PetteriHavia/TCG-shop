@@ -3,6 +3,7 @@ $yellow: #ffc800;
 $ice-blue: #34e5ff;
 $deep-blue: #4f7cac;
 $metal-black: #162521;
+$cancel-red: #f52626;
 
 * {
   padding: 0;
@@ -56,6 +57,16 @@ footer {
   }
 }
 
+::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #9e9e9e;
+  -webkit-border-radius: 1ex;
+}
+
 @import "./variables";
 @import "./navigation.scss";
 @import "./hero";
@@ -63,3 +74,4 @@ footer {
 @import "./services";
 @import "./footer";
 @import "./product-page.scss";
+@import "./cart";
