@@ -1,5 +1,4 @@
 import { MdSearch } from "react-icons/md";
-import { MdOutlineShoppingCart } from "react-icons/md";
 import { MdMenu } from "react-icons/md";
 import { MdClose } from "react-icons/md";
 import { useState } from "react";
@@ -7,6 +6,7 @@ import { IconContext } from "react-icons/lib";
 import MenuItem from "./MenuItem";
 import { useGetAllCategoriesQuery } from '../redux/reducers/apiSlice'
 import { useRef, useEffect } from "react";
+import CartPreview from "./CartPreview";
 
 const Navigation = () => {
   const [toggle, setToggle] = useState(false)
@@ -110,7 +110,7 @@ const Navigation = () => {
               <MdSearch onClick={() => setToggle(!toggle)} />
             </div>
           </div>
-          <MdOutlineShoppingCart />
+          <CartPreview />
         </div>
       </IconContext.Provider>
     </nav >
