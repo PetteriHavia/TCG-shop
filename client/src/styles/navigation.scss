@@ -45,16 +45,9 @@ nav ul {
   align-self: flex-end;
   display: none;
   text-align: end;
-  cursor: pointer;
 
   svg {
-    border-radius: 50%;
-    transition: 0.5s;
-
-    &:hover {
-      background-color: #162521;
-      padding: 0.2rem;
-    }
+    @include icon-close-hover;
   }
 }
 
@@ -62,6 +55,7 @@ nav ul {
   display: flex;
   gap: 2rem;
   align-items: center;
+  position: relative;
 }
 
 .search-bar {

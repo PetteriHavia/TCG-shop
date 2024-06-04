@@ -70,6 +70,7 @@ const ProductPage = () => {
       id: product.id,
       name: product.productName,
       amount: productAmount,
+      isStock: product.amount,
       normalPrice: currentItemPrice,
     }
     if (product.discount > 0) {
