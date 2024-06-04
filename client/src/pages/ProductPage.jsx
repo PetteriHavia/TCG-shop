@@ -5,13 +5,18 @@ import { useEffect, useState } from "react";
 import ProductVersionList from "../components/ProductVersionList";
 import { getDiscountedPrice, getDiscountSum } from "../utils/calculateDicount";
 import Breadcrumbs from "../components/Breadcrumbs";
+import { useDispatch, useSelector } from "react-redux";
+import { addItemsToCart, updateCartItemAmount } from "../redux/reducers/cartReducer";
+import { LiaShoppingBagSolid } from "react-icons/lia";
 
 const ProductPage = () => {
 
   const [currentItemPrice, setCurrentItemPrice] = useState(0);
   const [currentItemStock, setCurrentItemStock] = useState(1)
   const [productAmount, setProductAmount] = useState(1);
+  const cart = useSelector((state) => state.cart)
 
+  const dispatch = useDispatch();
   const { identifier } = useParams();
 
   const { data: product, isLoading } = useGetSingleProductQuery(identifier)
@@ -44,10 +49,12 @@ const ProductPage = () => {
     }
   }
 
+
   const handleSetCurrentItem = (price, amount) => {
     setCurrentItemPrice(price)
     setCurrentItemStock(amount)
     setProductAmount(1)
+    console.log(currentItemPrice)
   }
 
   if (isLoading) {
@@ -56,6 +63,27 @@ const ProductPage = () => {
         <p>Loading...</p>
       </div>
     )
+  }
+
+  const handleAddProductToCart = (product) => {
+    const productValues = {
+      id: product.id,
+      name: product.productName,
+      amount: productAmount,
+      isStock: product.amount,
+      normalPrice: currentItemPrice,
+    }
+    if (product.discount > 0) {
+      const discount = getDiscountedPrice(currentItemPrice, product.discount)
+      productValues.discountPrice = discount
+    }
+
+    const existingItem = cart.find(item => item.id === product.id)
+    if (existingItem) {
+      dispatch(updateCartItemAmount({ id: existingItem.id, amount: productAmount }))
+      return
+    }
+    dispatch(addItemsToCart(productValues))
   }
 
   return (
@@ -84,7 +112,12 @@ const ProductPage = () => {
                 </div>
                 {product.rarity && <p>Rarity: {product.rarity}</p>}
                 {product.setName && <p>Set: {product.setName}</p>}
-                <button>Add To Cart</button>
+                <button className="add-to-cart" onClick={() => handleAddProductToCart(product)}>
+                  Add To Cart
+                  <span>
+                    <LiaShoppingBagSolid />
+                  </span>
+                </button>
               </div>
               {product.categories.some(category => category.name === "Single card") ?
                 <ProductVersionList discount={product.discount} product={product.price} handleSetCurrentItem={handleSetCurrentItem} />
