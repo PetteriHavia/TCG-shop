@@ -11,12 +11,12 @@ const cartSlice = createSlice({
       return state.concat(action.payload)
     },
     updateCartItemAmount: (state, action) => {
-      const { id, amount } = action.payload
-      return state.map(item => item.id === id ? { ...item, amount } : item)
+      const { id, amount, condition } = action.payload
+      return state.map(item => item.id === id && item.condition === condition ? { ...item, amount } : item)
     },
     deleteProductFromCart: (state, action) => {
-      const { id } = action.payload;
-      return state.filter(item => item.id !== id)
+      const { id, condition } = action.payload;
+      return state.filter(item => !(item.id === id && item.condition === condition))
     },
   }
 })

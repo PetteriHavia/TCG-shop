@@ -29,19 +29,16 @@ const CartPreview = () => {
   }
 
 
-  const controlProductAmount = (action, id) => {
-    const item = cart.find(item => item.id === id)
-    const newAmount = item.amount === 1 ? dispatch(deleteProductFromCart({ id }))
-      : action === "minus" ? item.amount - 1
-        : Math.min(item.amount + 1, item.isStock)
+  const controlProductAmount = (action, id, condition) => {
+    const item = cart.find(item => item.id === id && item.condition === condition)
+    console.log(item)
+    const newAmount = action === "minus" && item.amount === 1
+      ? dispatch(deleteProductFromCart({ id, condition }))
+      : action === "minus"
+        ? item.amount - 1
+        : Math.min(item.amount + 1, item.inStock)
 
-    dispatch(updateCartItemAmount({ id, amount: newAmount }))
-    /*
-   if (action === "minus") {
-     dispatch(updateCartItemAmount({ id, amount: cart.find(item => item.id === id).amount - 1 }))
-   } else {
-     dispatch(updateCartItemAmount({ id, amount: cart.find(item => item.id === id).amount + 1 }))
-   }*/
+    dispatch(updateCartItemAmount({ id, condition, amount: newAmount }))
   }
 
   return (
@@ -55,17 +52,17 @@ const CartPreview = () => {
               <MdClose onClick={handleClosePreview} />
             </div>
             {cart.map((item) => (
-              <div key={item.id} className="container">
+              <div key={`${item.id}-${item.condition ?? 'no-condition'}`} className="container">
                 <div className="cart-item-container">
                   <img src={placeholderIMG} alt="product image" />
                   <div className="cart-item-info">
                     <p>{item.name}</p>
                     <div className="cart-item-action">
                       <div className="cart-item-amount">
-                        {item.amount === 1 ? <LiaTrashAlt onClick={() => controlProductAmount("minus", item.id)} /> :
-                          <LiaMinusCircleSolid onClick={() => controlProductAmount("minus", item.id)} />}
+                        {item.amount === 1 ? <LiaTrashAlt onClick={() => controlProductAmount("minus", item.id, item.condition)} /> :
+                          <LiaMinusCircleSolid onClick={() => controlProductAmount("minus", item.id, item.condition)} />}
                         <p>{item.amount}</p>
-                        <LiaPlusCircleSolid onClick={() => controlProductAmount("plus", item.id)} />
+                        <LiaPlusCircleSolid onClick={() => controlProductAmount("plus", item.id, item.condition)} />
                       </div>
                       <div className="cart-item-price">
                         <p>{item.discountPrice ? item.discountPrice : item.normalPrice}</p>
