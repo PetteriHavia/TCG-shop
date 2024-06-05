@@ -19,7 +19,7 @@ const ProductVersionList = ({ product, handleSetCurrentItem, discount }) => {
       <ul>
         {product.map((item, index) => (
           <li key={item.condition} className="product-item">
-            <input type="radio" name="item_price" onChange={() => handleSetCurrentItem(item.price, item.amount)} defaultChecked={index === 0} />
+            <input type="radio" name="item_price" onChange={() => handleSetCurrentItem(item.price, item.amount, item.condition)} defaultChecked={index === 0} />
             <div className="condition">
               {discount > 0 ?
                 <p><span className="discount-span">{item.price}€</span>{getDiscountedPrice(item.price, discount)}€ <span>(InStock: {item.amount})</span></p>
