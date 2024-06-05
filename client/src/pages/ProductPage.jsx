@@ -14,6 +14,7 @@ const ProductPage = () => {
   const [currentItemPrice, setCurrentItemPrice] = useState(0);
   const [currentItemStock, setCurrentItemStock] = useState(1)
   const [productAmount, setProductAmount] = useState(1);
+  const [currentItemCondition, setCurrentItemCondition] = useState('')
   const cart = useSelector((state) => state.cart)
 
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const ProductPage = () => {
       if (Array.isArray(product.price)) {
         setCurrentItemPrice(product.price[0].price);
         setCurrentItemStock(product.price[0].amount);
+        setCurrentItemCondition(product.price[0].condition)
       } else {
         setCurrentItemPrice(product.price);
         setCurrentItemStock(product.amount);
@@ -49,12 +51,11 @@ const ProductPage = () => {
     }
   }
 
-
-  const handleSetCurrentItem = (price, amount) => {
+  const handleSetCurrentItem = (price, amount, condition) => {
     setCurrentItemPrice(price)
     setCurrentItemStock(amount)
     setProductAmount(1)
-    console.log(currentItemPrice)
+    setCurrentItemCondition(condition)
   }
 
   if (isLoading) {
@@ -70,7 +71,7 @@ const ProductPage = () => {
       id: product.id,
       name: product.productName,
       amount: productAmount,
-      isStock: product.amount,
+      inStock: currentItemStock,
       normalPrice: currentItemPrice,
     }
     if (product.discount > 0) {
@@ -78,13 +79,19 @@ const ProductPage = () => {
       productValues.discountPrice = discount
     }
 
-    const existingItem = cart.find(item => item.id === product.id)
+    if (checkCategories) {
+      productValues.condition = currentItemCondition
+    }
+
+    const existingItem = cart.find(item => item.id === product.id && (!checkCategories || item.condition === currentItemCondition));
     if (existingItem) {
-      dispatch(updateCartItemAmount({ id: existingItem.id, amount: productAmount }))
+      dispatch(updateCartItemAmount({ id: existingItem.id, amount: productAmount, condition: existingItem.condition }))
       return
     }
     dispatch(addItemsToCart(productValues))
   }
+
+  const checkCategories = product?.categories.some(item => item.name === "Single card")
 
   return (
     <section>
@@ -119,7 +126,7 @@ const ProductPage = () => {
                   </span>
                 </button>
               </div>
-              {product.categories.some(category => category.name === "Single card") ?
+              {checkCategories ?
                 <ProductVersionList discount={product.discount} product={product.price} handleSetCurrentItem={handleSetCurrentItem} />
                 : null}
             </div>
