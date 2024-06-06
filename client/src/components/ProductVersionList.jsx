@@ -16,7 +16,7 @@ const ProductVersionList = ({ product, handleSetCurrentItem, discount }) => {
   return (
     <div className="column">
       <h2>Version</h2>
-      <ul>
+      <ul className="product-version-list">
         {product.map((item, index) => (
           <li key={item.condition} className="product-item">
             <input type="radio" name="item_price" onChange={() => handleSetCurrentItem(item.price, item.amount, item.condition)} defaultChecked={index === 0} />
