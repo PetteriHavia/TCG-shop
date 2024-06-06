@@ -12,19 +12,21 @@ const Breadcrumbs = () => {
       currentLink += `/${decodedItem}`
       const formatedItem = decodedItem.replace(/-/g, ' ')
       return (
-        <div className="crumb" key={item}>
-          <Link to={currentLink}>{formatedItem}</Link>
-        </div>
+        <li className="crumb" key={item}>
+          <span>
+            <Link to={currentLink}>{formatedItem}</Link>
+          </span>
+        </li>
       )
     })
 
   return (
-    <div className="breadcrumbs">
-      <div className="crumb" key="home">
+    <ul className="breadcrumbs">
+      <li className="crumb" key="home">
         <Link to="/">Home</Link>
-      </div>
+      </li>
       {crumbs}
-    </div>
+    </ul>
   )
 }
 

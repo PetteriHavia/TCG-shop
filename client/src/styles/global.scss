@@ -33,13 +33,15 @@ footer {
 }
 
 .breadcrumbs {
-  display: flex;
-  gap: 1rem;
   padding: 0rem 0rem 2rem 0rem;
+  list-style: none;
+  word-break: break-all;
 
   .crumb {
     text-transform: capitalize;
     font-style: italic;
+    display: inline;
+    word-break: break-word;
 
     a {
       text-decoration: none;
@@ -48,7 +50,7 @@ footer {
 
     &::after {
       content: ">";
-      margin-left: 15px;
+      margin: 0px 15px;
     }
 
     &:last-child::after {
