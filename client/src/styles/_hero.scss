@@ -46,7 +46,7 @@ button {
     gap: 2rem;
   }
 
-  .column {
+  header .column {
     text-align: center;
     align-items: center;
 
@@ -58,9 +58,8 @@ button {
       align-self: center;
       width: 100%;
     }
-  }
-
-  button {
-    align-self: center;
+    button {
+      align-self: center;
+    }
   }
 }
