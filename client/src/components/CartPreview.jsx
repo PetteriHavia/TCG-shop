@@ -25,9 +25,11 @@ const CartPreview = () => {
   }
 
   const calculateTotal = () => {
-    return cart.reduce((acc, curr) => (curr.discountPrice ? acc += curr.discountPrice : acc += curr.normalPrice), 0).toFixed(2)
+    return cart.reduce((acc, curr) => {
+      const price = curr.discountPrice ? curr.discountPrice : curr.normalPrice
+      return acc + (price * curr.amount)
+    }, 0)
   }
-
 
   const controlProductAmount = (action, id, condition) => {
     const item = cart.find(item => item.id === id && item.condition === condition)
