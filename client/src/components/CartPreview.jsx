@@ -1,10 +1,12 @@
 import { useDispatch, useSelector } from "react-redux"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdOutlineShoppingCart } from "react-icons/md"
 import placeholderIMG from "../assets/images/products-header.png"
 import { LiaMinusCircleSolid, LiaPlusCircleSolid, LiaTrashAlt } from "react-icons/lia";
 import { MdClose } from "react-icons/md";
 import { updateCartItemAmount, deleteProductFromCart } from "../redux/reducers/cartReducer";
+import { Link } from "react-router-dom"
+import { formatPath } from "../utils/formatPath";
 
 
 const CartPreview = () => {
@@ -14,6 +16,12 @@ const CartPreview = () => {
 
   const dispatch = useDispatch()
 
+  useEffect(() => {
+    if (cart.length === 0) {
+      setIsOpen(false)
+    }
+  }, [cart])
+
   const handleOpenCartPreview = () => {
     if (cart.length > 0) {
       setIsOpen(true)
@@ -21,19 +29,21 @@ const CartPreview = () => {
   }
 
   const handleClosePreview = () => {
-    setIsOpen(!isOpen)
+    setIsOpen(false)
   }
 
   const calculateTotal = () => {
-    return cart.reduce((acc, curr) => {
+    const total = cart.reduce((acc, curr) => {
       const price = curr.discountPrice ? curr.discountPrice : curr.normalPrice
       return acc + (price * curr.amount)
     }, 0)
+    return Math.round(total * 100) / 100
   }
 
   const controlProductAmount = (action, id, condition) => {
     const item = cart.find(item => item.id === id && item.condition === condition)
     console.log(item)
+
     const newAmount = action === "minus" && item.amount === 1
       ? dispatch(deleteProductFromCart({ id, condition }))
       : action === "minus"
@@ -45,7 +55,10 @@ const CartPreview = () => {
 
   return (
     <div className="carttest">
-      <MdOutlineShoppingCart onClick={handleOpenCartPreview} />
+      <div className="cart-icons">
+        <MdOutlineShoppingCart onClick={handleOpenCartPreview} />
+        {cart.length > 0 ? <span>{cart.length}</span> : null}
+      </div>
       {isOpen && cart.length > 0 ?
         (
           <div className="cart-preview">
@@ -53,31 +66,33 @@ const CartPreview = () => {
               <h3>Cart</h3>
               <MdClose onClick={handleClosePreview} />
             </div>
-            {cart.map((item) => (
-              <div key={`${item.id}-${item.condition ?? 'no-condition'}`} className="container">
-                <div className="cart-item-container">
-                  <img src={placeholderIMG} alt="product image" />
-                  <div className="cart-item-info">
-                    <p>{item.name}</p>
-                    <div className="cart-item-action">
-                      <div className="cart-item-amount">
-                        {item.amount === 1 ? <LiaTrashAlt onClick={() => controlProductAmount("minus", item.id, item.condition)} /> :
-                          <LiaMinusCircleSolid onClick={() => controlProductAmount("minus", item.id, item.condition)} />}
-                        <p>{item.amount}</p>
-                        <LiaPlusCircleSolid onClick={() => controlProductAmount("plus", item.id, item.condition)} />
-                      </div>
-                      <div className="cart-item-price">
-                        <p>{item.discountPrice ? item.discountPrice : item.normalPrice}</p>
+            <div className="container">
+              {cart.map((item) => (
+                <div key={`${item.name}-${item.condition ?? 'no-condition'}`}>
+                  <div className="cart-item-container">
+                    <img src={placeholderIMG} alt="product image" />
+                    <div className="cart-item-info">
+                      <Link to={`/products/${formatPath(item.name)}`}>{item.name}</Link>
+                      <div className="cart-item-action">
+                        <div className="cart-item-amount">
+                          {item.amount === 1 ? <LiaTrashAlt onClick={() => controlProductAmount("minus", item.id, item.condition)} /> :
+                            <LiaMinusCircleSolid onClick={() => controlProductAmount("minus", item.id, item.condition)} />}
+                          <p>{item.amount}</p>
+                          <LiaPlusCircleSolid onClick={() => controlProductAmount("plus", item.id, item.condition)} />
+                        </div>
+                        <div className="cart-item-price">
+                          <p>{item.discountPrice ? item.discountPrice : item.normalPrice}€</p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
             <div className="cart-footer">
               <div className="cart-total">
                 <p>{cart.length} products</p>
-                <p>Total: {calculateTotal()}</p>
+                <p>Total: {calculateTotal()}€</p>
               </div>
               <button>
                 Checkout
