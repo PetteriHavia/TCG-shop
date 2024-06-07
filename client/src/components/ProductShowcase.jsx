@@ -17,9 +17,12 @@ const ProductShowcase = ({ products, header }) => {
           {products.map((item) => (
             <div key={item._id} className="card">
               {item.discount > 0 ? <p className="discount-sticker">-{item.discount}%</p> : null}
-              <img src={placeholderIMG} alt="product image" />
+              <Link to={`products/${formatPath(item.productName)}`} className='product-details'>
+                <img src={placeholderIMG} alt="product image" />
+                <p>{item.productName}</p>
+                {item.setName ? <p>{item.setName}</p> : null}
+              </Link>
               <div className="product-details">
-                <Link to={`products/${formatPath(item.productName)}`}><p>{item.productName}</p></Link>
                 {item.discount > 0 ?
                   <h4><span className="discount-span">{getPrice(item)} €</span>{getDiscountedPrice(getPrice(item), item.discount)} €</h4>
                   :
