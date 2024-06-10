@@ -11,16 +11,23 @@ productRouter.get("/filter", async (request, response, next) => {
   const filters = {}
 
   if (amount === "true") {
-    filters.amount = { $gt: 0 }
+    filters.$or = [
+      { 'price.amount': { $gt: 0 } },
+      { 'amount': { $gt: 0 } }
+    ];
   } else if (amount === "false") {
-    filters.amount = 0
+    filters.$or = [
+      { 'price.amount': 0 },
+      { amount: 0 }
+    ];
   }
 
   if (category) {
     try {
-      const categoryObject = await Category.findOne({ name: { $regex: new RegExp('^' + category + '$', 'i') } });
-      if (categoryObject) {
-        filters.category = categoryObject._id;
+      const categoryNames = category.split(",");
+      const categoryObject = await Category.find({ name: { $in: categoryNames.map(name => new RegExp(`^${name}$`, 'i')) } });
+      if (categoryObject.length) {
+        filters.categories = { $in: categoryObject.map(category => category._id) };
       } else {
         return response.status(200).json([]);
       }
@@ -30,7 +37,7 @@ productRouter.get("/filter", async (request, response, next) => {
   }
 
   if (rarity) {
-    filters.rarity = rarity;
+    filters.rarity = { $in: rarity.split(',') };
   }
 
   try {
