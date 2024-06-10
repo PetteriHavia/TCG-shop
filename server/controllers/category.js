@@ -1,12 +1,20 @@
 const categoryRouter = require("express").Router()
 const Category = require("../models/category")
 const { checkExistingDuplicate } = require("../utils/checkExistingDuplicate")
+const mongoose = require("mongoose")
 
 
-categoryRouter.get("/:id", async (request, response, next) => {
-  const categoryId = request.params.id
+categoryRouter.get("/:identifier", async (request, response, next) => {
+  const identifier = request.params.identifier;
+  console.log(identifier)
   try {
-    const category = await Category.findById(categoryId)
+    let category;
+    if (mongoose.Types.ObjectId.isValid(identifier)) {
+      category = await Category.findById(identifier)
+      console.log(category)
+    } else {
+      category = await Category.findOne({ name: identifier })
+    }
     if (!category) {
       return response.status(404).json({ error: "No category found" })
     }
