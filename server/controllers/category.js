@@ -11,9 +11,9 @@ categoryRouter.get("/:identifier", async (request, response, next) => {
     let category;
     if (mongoose.Types.ObjectId.isValid(identifier)) {
       category = await Category.findById(identifier)
-      console.log(category)
     } else {
-      category = await Category.findOne({ name: identifier })
+      category = await Category.findOne({ name: { $regex: new RegExp(`^${identifier}$`, 'i') } })
+        .populate("products", { productName: 1, price: 1, status: 1, id: 1, discount: 1, setName: 1, img: 1 })
     }
     if (!category) {
       return response.status(404).json({ error: "No category found" })
@@ -24,12 +24,15 @@ categoryRouter.get("/:identifier", async (request, response, next) => {
   }
 })
 
-categoryRouter.get("/", async (request, response, error) => {
+categoryRouter.get("/", async (request, response, next) => {
   try {
-    const categories = await Category.find({})
+    const categories = await Category.find({}).populate("products", {
+      productName: 1, price: 1, status: 1, discount: 1, setName: 1, img: 1
+    })
     if (!categories) {
       return response.status(404).json({ error: "No categories found" })
     }
+
     response.status(201).json(categories)
   } catch (error) {
     next(error)
