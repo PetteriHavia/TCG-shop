@@ -11,8 +11,9 @@ function App() {
       <Navigation />
       <Routes>
         <Route exec path="/" element={<Home />} />
-        <Route path="/products/:identifier" element={<ProductPage />} />
-        <Route path="search/products/:category" element={<AllProducts />} />
+        <Route path="/products" element={<AllProducts />} />
+        <Route path="/products/:category" element={<AllProducts />} />
+        <Route path="/products/:category/:identifier" element={<ProductPage />} />
       </Routes>
     </>
   )
