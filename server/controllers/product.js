@@ -55,12 +55,15 @@ productRouter.get("/filter", async (request, response, next) => {
 productRouter.get("/status", async (request, response, next) => {
   const { status } = request.query
   try {
-    const productStatus = await Product.aggregate([{ $match: { status: { $regex: new RegExp(`^${status}$`, 'i') } } }]).limit(4)
+    const productStatus = await Product.find({ status: { $regex: new RegExp(`^${status}$`, 'i') } })
+      .limit(4)
+      .populate("categories", { name: 1 })
     console.log(productStatus)
     if (productStatus.length === 0) {
       return response.status(404).json({ error: "No products found" })
     }
-    return response.status(200).json(productStatus)
+
+    response.status(200).json(productStatus)
   } catch (error) {
     next(error)
   }
@@ -89,12 +92,11 @@ productRouter.get("/:slug", async (request, response, next) => {
       return response.status(201).json(product)
     }
     const product = await Product.findOne({ slug: { $regex: new RegExp(`^${slug}$`, 'i') } })
+      .populate("categories", { name: 1 })
     if (!product) {
       return response.status(400).json({ message: "Product not found" })
     }
-
-    const populatedProduct = await product.populate("categories", { name: 1 })
-    return response.status(201).json(populatedProduct)
+    return response.status(201).json(product)
   } catch (error) {
     next(error)
   }
