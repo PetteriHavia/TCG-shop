@@ -1,12 +1,14 @@
 import { useLocation, useParams } from "react-router-dom"
-import React from "react"
+import React, { useState } from "react"
 import Breadcrumbs from "../components/Breadcrumbs"
 import Filter from "../components/Filter"
 import { useGetAllCategoriesQuery, useGetCategoryQuery } from "../redux/reducers/apiSlice"
 import ProductCard from "../components/ProductCard"
+import useScreenSize from "../hooks/useScreenSize"
 
 const AllProducts = () => {
-
+  const [filterToggle, setFilterToggle] = useState(false)
+  const windowSize = useScreenSize()
   const { category } = useParams()
   const location = useLocation()
 
@@ -15,17 +17,17 @@ const AllProducts = () => {
 
   const headerText = location.pathname.split("/").filter(item => item !== "").slice(-1)
 
-
   return (
-    <div className="container-md">
+    <section className="container-md">
       <Breadcrumbs />
       {!isLoadingAll ?
         <>
           <div className="url-header">
             <h2>{decodeURIComponent(headerText)}</h2>
           </div>
+          {windowSize.width > 992 ? null : <button onClick={() => setFilterToggle(true)}>Filter</button>}
           <div className="search-layout">
-            <Filter text={headerText} />
+            <Filter text={headerText} filterToggle={filterToggle} setFilterToggle={setFilterToggle} />
             <div className="product-grid">
               {allCategoriesData && allCategoriesData.map((item) => (
                 <React.Fragment key={item.id}>
@@ -39,7 +41,7 @@ const AllProducts = () => {
         </>
         : null
       }
-    </div>
+    </section>
   )
 }
 export default AllProducts
