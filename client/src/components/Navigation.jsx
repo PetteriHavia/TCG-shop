@@ -7,11 +7,13 @@ import MenuItem from "./MenuItem";
 import { useGetAllCategoriesQuery } from '../redux/reducers/apiSlice'
 import { useRef, useEffect } from "react";
 import CartPreview from "./CartPreview";
+import useScreenSize from "../hooks/useScreenSize";
 
 const Navigation = () => {
   const [toggle, setToggle] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(null)
+  const windowSize = useScreenSize()
   const menuRef = useRef(null)
 
   useEffect(() => {
@@ -95,8 +97,8 @@ const Navigation = () => {
           <MdMenu className="menu-icon" onClick={() => setIsOpen(true)} />
           <img src="#" alt="Logo" />
           {!isLoading ?
-            <ul className={isOpen ? "" : "hidden"}>
-              {isOpen ? <li className="close-icon"><MdClose onClick={() => setIsOpen(false)} /></li> : null}
+            <ul className={isOpen ? "is-active" : ""}>
+              {windowSize.width <= 992 ? <li className="close-icon"><MdClose onClick={() => setIsOpen(false)} /></li> : null}
               {menuItems.map((item, index) => (
                 <MenuItem key={index} item={item} index={index} activeIndex={activeIndex} onItemClick={() => handleMenuIndex(index)} />
               ))}

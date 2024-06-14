@@ -1,6 +1,9 @@
 
-const Filter = ({ text }) => {
+import { MdClose } from "react-icons/md"
+import useScreenSize from "../hooks/useScreenSize"
 
+const Filter = ({ text, filterToggle, setFilterToggle }) => {
+  const windowSize = useScreenSize()
   const rarity = [
     { id: 1, name: "Single Card", },
     { id: 2, name: "Booster", },
@@ -16,7 +19,11 @@ const Filter = ({ text }) => {
   ]
 
   return (
-    <div className="filter-container">
+    <div className={`filter ${filterToggle ? "is-active" : ""}`}>
+      {windowSize.width <= 992 ?
+        <div className="close-icon">
+          <MdClose onClick={() => setFilterToggle(false)} />
+        </div> : null}
       <div className="filter-part">
         <h3>Availability</h3>
         <div className="input-box">
