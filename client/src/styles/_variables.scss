@@ -21,3 +21,30 @@
     color: white;
   }
 }
+
+@mixin close-icon-container {
+  font-size: 2rem;
+  display: flex;
+  justify-content: end;
+}
+
+@mixin sidepanel($bg-color) {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  max-width: 350px;
+  width: 100%;
+  transform: translateX(-100%);
+  transition: all 0.2s ease-in;
+  opacity: 0;
+  z-index: 1000;
+  background-color: $bg-color;
+  padding: 1rem;
+
+  &.is-active {
+    transform: translateX(0%);
+    border: 1px solid rgb(170, 170, 170);
+    opacity: 1;
+  }
+}
