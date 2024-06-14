@@ -64,7 +64,9 @@ const CartPreview = () => {
           <div className="cart-preview">
             <div className="cart-header">
               <h3>Cart</h3>
-              <MdClose onClick={handleClosePreview} />
+              <div className="close-icon">
+                <MdClose onClick={handleClosePreview} />
+              </div>
             </div>
             <div className="container">
               {cart.map((item) => (
