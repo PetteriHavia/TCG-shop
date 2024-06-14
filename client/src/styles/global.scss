@@ -5,6 +5,9 @@ $deep-blue: #4f7cac;
 $metal-black: #162521;
 $cancel-red: #f52626;
 $cyan: #0bbbbb;
+$light-gray: #aaaaaa;
+
+@import "./variables";
 
 * {
   padding: 0;
@@ -31,6 +34,14 @@ footer {
   margin-right: 0.5rem;
   font-size: 1rem;
   text-decoration: line-through;
+}
+
+.close-icon {
+  @include close-icon-container;
+
+  svg {
+    @include icon-close-hover;
+  }
 }
 
 .breadcrumbs {
@@ -70,7 +81,6 @@ footer {
   -webkit-border-radius: 1ex;
 }
 
-@import "./variables";
 @import "./navigation.scss";
 @import "./hero";
 @import "./product-showcase";

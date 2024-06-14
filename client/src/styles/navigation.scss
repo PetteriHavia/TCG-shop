@@ -41,16 +41,6 @@ nav ul {
   }
 }
 
-.close-icon {
-  align-self: flex-end;
-  display: none;
-  text-align: end;
-
-  svg {
-    @include icon-close-hover;
-  }
-}
-
 .nav-actions {
   display: flex;
   gap: 2rem;
@@ -136,28 +126,13 @@ nav ul {
 
 @media (max-width: 992px) {
   nav ul {
-    position: absolute;
-    background-color: #4f7cac;
+    @include sidepanel(#fff);
     display: block;
-    top: 0;
-    left: 0;
-    width: 350px;
-    align-items: flex-start;
-    height: 100%;
 
     li {
       width: 100%;
-      border-bottom: 1px solid white;
+      border-bottom: 1px solid #929292;
       padding: 1rem 1rem;
-    }
-  }
-
-  nav {
-    li,
-    .close-icon,
-    .main-link,
-    .sub-link {
-      color: white;
     }
   }
 
@@ -165,7 +140,6 @@ nav ul {
     justify-content: space-between;
   }
 
-  .hidden,
   :hover::after {
     display: none;
   }
@@ -179,8 +153,7 @@ nav ul {
     justify-content: space-between;
   }
 
-  .menu-icon,
-  ul > .close-icon {
+  .menu-icon {
     display: block;
   }
 }
