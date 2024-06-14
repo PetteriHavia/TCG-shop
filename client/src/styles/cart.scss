@@ -46,6 +46,9 @@
   display: flex;
   justify-content: space-between;
 
+  .close-icon {
+  }
+
   svg {
     @include icon-close-hover;
   }
