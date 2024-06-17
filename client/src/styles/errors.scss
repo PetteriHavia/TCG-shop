@@ -1,0 +1,24 @@
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem 1.5rem;
+
+  .error-text {
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 5rem;
+  }
+
+  img {
+    max-width: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .error-container {
+    flex-direction: column;
+  }
+}
