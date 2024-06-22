@@ -1,24 +1,113 @@
 const categoryRouter = require("express").Router()
+const category = require("../models/category")
 const Category = require("../models/category")
+const Product = require("../models/product")
 const { checkExistingDuplicate } = require("../utils/checkExistingDuplicate")
 const mongoose = require("mongoose")
+
+categoryRouter.get("/:category/filter", async (request, response, next) => {
+  const { category } = request.params;
+  const { amount, rarity, type } = request.query;
+  const filters = {}
+
+  if (amount === "true") {
+    filters.$or = [
+      { 'price.amount': { $gt: 0 } },
+      { 'amount': { $gt: 0 } }
+    ];
+  } else if (amount === "false") {
+    filters.$or = [
+      { 'price.amount': 0 },
+      { amount: 0 }
+    ];
+  }
+
+  if (rarity) {
+    filters.rarity = { $in: rarity.split(',') };
+  }
+
+  if (type) {
+    filters.type = { $in: type.split(',') };
+  }
+
+  try {
+    if (category == "all") {
+      const products = await Product.find(filters)
+      return response.status(201).json({ name: "all", products })
+    } else {
+      const categoryObject = await Category.findOne({ name: new RegExp(`^${category}$`, 'i') }).populate('products');
+      if (!categoryObject) {
+        return response.status(404).json({ error: "Category not found" })
+      }
+
+      const filteredProducts = categoryObject.products.filter(product => {
+        let hasPositiveAmount = false;
+        if (Array.isArray(product.price)) {
+          hasPositiveAmount = product.price.some(price => price.amount > 0)
+        } else {
+          hasPositiveAmount = product.price > 0
+        }
+
+        if (amount === "true" && !hasPositiveAmount && product.amount <= 0) {
+          return false
+        }
+        if (amount === "false" && (hasPositiveAmount || product.amount > 0)) {
+          return false
+        }
+        if (rarity && !filters.rarity.$in.includes(product.rarity)) {
+          return false;
+        }
+        if (type && !filters.type.includes(product.type)) {
+          return false
+        }
+        return true
+      });
+
+      return response.status(201).json({ name: categoryObject.name, products: filteredProducts })
+    }
+  } catch (error) {
+    next(error)
+  }
+})
 
 
 categoryRouter.get("/:identifier", async (request, response, next) => {
   const identifier = request.params.identifier;
-  console.log(identifier)
   try {
     let category;
     if (mongoose.Types.ObjectId.isValid(identifier)) {
-      category = await Category.findById(identifier)
+      category = await Category.findById(identifier).populate("products", {
+        productName: 1, price: 1, status: 1, id: 1, discount: 1, setName: 1, img: 1
+      })
     } else {
       category = await Category.findOne({ name: { $regex: new RegExp(`^${identifier}$`, 'i') } })
-        .populate("products", { productName: 1, price: 1, status: 1, id: 1, discount: 1, setName: 1, img: 1 })
+        .populate("products")
     }
     if (!category) {
       return response.status(404).json({ error: "No category found" })
     }
     response.status(201).json(category)
+  } catch (error) {
+    next(error)
+  }
+})
+
+categoryRouter.get("/:category/:identifier", async (request, response, next) => {
+  const { category, identifier } = request.params;
+  console.log(category, identifier)
+  try {
+    const categoryName = await Category.findOne({ name: { $regex: new RegExp(`^${category}$`, 'i') } })
+      .populate({
+        path: 'products', populate: { path: "categories", model: "Category", }
+      })
+    if (!categoryName) {
+      return response.status(404).json({ error: "No category found" })
+    }
+    const product = categoryName.products.find(product => product.slug === identifier)
+    if (!product) {
+      return response.status(404).json({ error: "Product not found" })
+    }
+    return response.status(201).json(product)
   } catch (error) {
     next(error)
   }
