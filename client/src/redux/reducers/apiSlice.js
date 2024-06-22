@@ -11,11 +11,14 @@ export const shopApi = createApi({
       query: (status) => `products/status?status=${status}?`
     }),
     getSingleProduct: builder.query({
-      query: (id) => `products/${id}`
+      query: ({ category, identifier }) => `categories/${category}/${identifier}`,
     }),
     getCategory: builder.query({
-      query: (id) => `categories/${id}`
-    })
+      query: ({ id, filters }) => ({
+        url: `categories/${id}/filter`,
+        params: filters
+      }),
+    }),
   })
 })
 
