@@ -1,5 +1,5 @@
 import { useLocation, useParams } from "react-router-dom"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Breadcrumbs from "../components/Breadcrumbs"
 import Filter from "../components/Filter"
 import { useGetAllCategoriesQuery, useGetCategoryQuery } from "../redux/reducers/apiSlice"
@@ -9,19 +9,17 @@ import PageNotFound from "../components/PageNotFound"
 
 const AllProducts = () => {
   const [filterToggle, setFilterToggle] = useState(false)
+  const [filters, setFilters] = useState()
   const windowSize = useScreenSize()
   const { category } = useParams()
   const location = useLocation()
 
-  const { data: allCategoriesData, isLoading: isLoadingAll } = useGetAllCategoriesQuery(undefined, { skip: !!category })
-  const { data: singleCategoryData, isLoading: isLoadingSingle } = useGetCategoryQuery(category, { skip: !category })
+
+  const { data: filterData, isLoading: isLoadingFilter } = useGetCategoryQuery({ id: category || "all", filters })
 
   const headerText = location.pathname.split("/").filter(item => item !== "").slice(-1)
 
-  const dataToDisplay = category ? singleCategoryData : allCategoriesData
-  const isLoading = category ? isLoadingSingle : isLoadingAll
-
-  const isInvalidCategory = !isLoading && !dataToDisplay && category;
+  const isInvalidCategory = !isLoadingFilter && !filterData && category;
 
   return (
     <section className="container-md">
@@ -31,35 +29,22 @@ const AllProducts = () => {
         <>
           <Breadcrumbs />
           <div className="url-header">
-            <h2>{decodeURIComponent(headerText)}</h2>
+            <h2>{filterData?.name}</h2>
           </div>
           {windowSize.width > 992 ? null : <button onClick={() => setFilterToggle(true)}>Filter</button>}
           <div className="search-layout">
             <Filter text={headerText} filterToggle={filterToggle} setFilterToggle={setFilterToggle} />
-            {isLoading ?
+            {isLoadingFilter ?
               <div>Loading...</div>
-              : dataToDisplay && dataToDisplay.length === 0 ?
+              : filterData && filterData.length === 0 ?
                 <div>No products available</div>
                 :
                 <div className="product-grid">
-                  {category ? (
-                    singleCategoryData && (
-                      <React.Fragment key={singleCategoryData.id}>
-                        {singleCategoryData.products.map((product) => (
-                          <ProductCard item={product} key={product.id} categoryName={singleCategoryData.name} />
-                        ))}
-                      </React.Fragment>
-                    )
-                  ) : (
-                    allCategoriesData && allCategoriesData.map((item) => (
-                      <React.Fragment key={item.id}>
-                        {item.products.map((product) => (
-                          <ProductCard item={product} key={product.id} categoryName={item.name} />
-                        ))}
-                      </React.Fragment>
-                    ))
-                  )
-                  }
+                  <React.Fragment key={filterData.id}>
+                    {filterData.products.map((product) => (
+                      <ProductCard item={product} key={product.id} categoryName={product.categories[0].name} />
+                    ))}
+                  </React.Fragment>
                 </div>
             }
           </div>
