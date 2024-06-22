@@ -64,6 +64,7 @@
   font-size: 1.5rem;
   text-decoration: none;
   text-align: center;
+  padding-top: 1rem;
 
   a,
   p {
@@ -73,6 +74,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     color: $metal-black;
+    font-size: 1.2rem;
   }
 }
 
