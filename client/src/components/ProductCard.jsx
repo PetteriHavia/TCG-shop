@@ -3,19 +3,16 @@ import { getDiscountedPrice, getPrice } from "../utils/calculateDicount";
 import { Link } from "react-router-dom"
 import { formatPath } from "../utils/formatPath";
 
-const ProductCard = ({ item, categoryName }) => {
-
-  let productCategory = categoryName ? categoryName : item.categories[0].name
+const ProductCard = ({ item }) => {
 
   return (
     <>
       {item &&
         <div key={item._id} className="card">
           {item.discount > 0 ? <p className="discount-sticker">-{item.discount}%</p> : null}
-          <Link to={`/products/${formatPath(productCategory)}/${formatPath(item.productName)}`} className='product-details'>
+          <Link to={`/products/${item.setName}/${item.slug}`} className='product-details'>
             <img src={placeholderIMG} alt="product image" />
             <p>{item.productName}</p>
-            {item.setName ? <p>{item.setName}</p> : null}
           </Link>
           <div className="product-details">
             {item.discount > 0 ?
