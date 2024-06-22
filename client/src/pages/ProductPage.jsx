@@ -8,6 +8,7 @@ import Breadcrumbs from "../components/Breadcrumbs";
 import { useDispatch, useSelector } from "react-redux";
 import { addItemsToCart, updateCartItemAmount } from "../redux/reducers/cartReducer";
 import { LiaShoppingBagSolid } from "react-icons/lia";
+import PageNotFound from "../components/PageNotFound";
 
 const ProductPage = () => {
 
@@ -18,9 +19,9 @@ const ProductPage = () => {
   const cart = useSelector((state) => state.cart)
 
   const dispatch = useDispatch();
-  const { identifier } = useParams();
+  const { category, identifier } = useParams();
 
-  const { data: product, isLoading } = useGetSingleProductQuery(identifier)
+  const { data: product, isLoading, isError } = useGetSingleProductQuery({ category, identifier })
 
   useEffect(() => {
     if (!isLoading && product) {
@@ -87,53 +88,57 @@ const ProductPage = () => {
 
   return (
     <section>
-      {!isLoading ?
-        <div className="container-md">
-          <Breadcrumbs params={identifier} />
-          <div className="product-container">
-            <img src={placeholderIMG} alt="product image" />
-            <div className="product-layout">
-              <div className="product-info">
-                <div className="column">
-                  <h2>{product.productName}</h2>
-                  {product.discount > 0 ?
-                    <div className="discount-information">
-                      <h3>{getDiscountedPrice(currentItemPrice, product.discount)}€</h3>
-                      <span>Save: <span>{product.discount}% </span><span>({getDiscountSum(currentItemPrice, product.discount)}€)</span></span>
+      {isError ? (
+        <PageNotFound />
+      ) : (
+        !isLoading && product && (
+          <div className="container-md">
+            <Breadcrumbs params={identifier} />
+            <div className="product-container">
+              <img src={placeholderIMG} alt="product image" />
+              <div className="product-layout">
+                <div className="product-info">
+                  <div className="column">
+                    <h2>{product.productName}</h2>
+                    {product.discount > 0 ?
+                      <div className="discount-information">
+                        <h3>{getDiscountedPrice(currentItemPrice, product.discount)}€</h3>
+                        <span>Save: <span>{product.discount}% </span><span>({getDiscountSum(currentItemPrice, product.discount)}€)</span></span>
+                      </div>
+                      :
+                      <h3>{currentItemPrice.toFixed(2)}€</h3>
+                    }
+                    {product.amount && <h3>{product.amount} in Stock</h3>}
+                    <div className="product-amount-control">
+                      <button onClick={() => handleControl("minus")}>-</button>
+                      <p>{productAmount}</p>
+                      <button onClick={() => handleControl("plus")}>+</button>
                     </div>
-                    :
-                    <h3>{currentItemPrice.toFixed(2)}€</h3>
-                  }
-                  {product.amount && <h3>{product.amount} in Stock</h3>}
-                  <div className="product-amount-control">
-                    <button onClick={() => handleControl("minus")}>-</button>
-                    <p>{productAmount}</p>
-                    <button onClick={() => handleControl("plus")}>+</button>
+                    {product.rarity && <p>Rarity: {product.rarity}</p>}
+                    {product.setName && <p>Set: {product.setName}</p>}
+                    <button className="add-to-cart" onClick={() => handleAddProductToCart(product)}>
+                      Add To Cart
+                      <span>
+                        <LiaShoppingBagSolid />
+                      </span>
+                    </button>
                   </div>
-                  {product.rarity && <p>Rarity: {product.rarity}</p>}
-                  {product.setName && <p>Set: {product.setName}</p>}
-                  <button className="add-to-cart" onClick={() => handleAddProductToCart(product)}>
-                    Add To Cart
-                    <span>
-                      <LiaShoppingBagSolid />
-                    </span>
-                  </button>
+                  {checkCategories ?
+                    <ProductVersionList discount={product.discount} product={product.price} handleSetCurrentItem={handleSetCurrentItem} />
+                    : null}
                 </div>
-                {checkCategories ?
-                  <ProductVersionList discount={product.discount} product={product.price} handleSetCurrentItem={handleSetCurrentItem} />
-                  : null}
               </div>
             </div>
+            {product.description && product.description.length > 0 && (
+              <div className="product-description">
+                {product.description.map((text, index) => (
+                  <p key={index}>{text}</p>
+                ))}
+              </div>
+            )}
           </div>
-          {product.description && product.description.length > 0 && (
-            <div className="product-description">
-              {product.description.map((text, index) => (
-                <p key={index}>{text}</p>
-              ))}
-            </div>
-          )}
-        </div>
-        : null}
+        )
+      )}
     </section>
   )
 }

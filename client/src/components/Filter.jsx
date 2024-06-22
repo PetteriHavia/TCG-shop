@@ -4,14 +4,14 @@ import useScreenSize from "../hooks/useScreenSize"
 
 const Filter = ({ text, filterToggle, setFilterToggle }) => {
   const windowSize = useScreenSize()
-  const rarity = [
+  const types = [
     { id: 1, name: "Single Card", },
     { id: 2, name: "Booster", },
     { id: 3, name: "Tin Box", },
     { id: 4, name: "Elite Trainer Box", }
   ]
 
-  const types = [
+  const rarity = [
     { id: 1, name: "Common", },
     { id: 2, name: "Uncommon", },
     { id: 3, name: "Rare", },
