@@ -14,12 +14,15 @@ export const shopApi = createApi({
       query: ({ category, identifier }) => `categories/${category}/${identifier}`,
     }),
     getCategory: builder.query({
-      query: ({ id, filters }) => ({
-        url: `categories/${id}/filter`,
-        params: filters
-      }),
+      query: ({ id, filters }) => {
+        const params = new URLSearchParams(filters).toString()
+        return {
+          url: `categories/${id}/filter`,
+          params
+        }
+      }
     }),
-  })
+  }),
 })
 
 export const {

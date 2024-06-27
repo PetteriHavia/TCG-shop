@@ -1,9 +1,14 @@
 
 import { MdClose } from "react-icons/md"
 import useScreenSize from "../hooks/useScreenSize"
+import { useDispatch, useSelector } from "react-redux"
+import { setAvailability, setRarity, setType } from "../redux/reducers/filterReducer"
 
-const Filter = ({ text, filterToggle, setFilterToggle }) => {
+const Filter = ({ filterToggle, setFilterToggle }) => {
   const windowSize = useScreenSize()
+  const filters = useSelector((state) => state.filters)
+  const dispatch = useDispatch()
+
   const types = [
     { id: 1, name: "Single Card", },
     { id: 2, name: "Booster", },
@@ -18,6 +23,23 @@ const Filter = ({ text, filterToggle, setFilterToggle }) => {
     { id: 4, name: "Ultra Rare" }
   ]
 
+  const handleToggelCheckBox = (e) => {
+    const { name, value, checked } = e.target
+    switch (name) {
+      case "availability":
+        dispatch(setAvailability(checked))
+        break;
+      case "type":
+        dispatch(setType(value))
+        break;
+      case "rarity":
+        dispatch(setRarity(value))
+        break;
+      default:
+        break
+    }
+  }
+
   return (
     <div className={`filter ${filterToggle ? "is-active" : ""}`}>
       {windowSize.width <= 992 ?
@@ -27,7 +49,7 @@ const Filter = ({ text, filterToggle, setFilterToggle }) => {
       <div className="filter-part">
         <h3>Availability</h3>
         <div className="input-box">
-          <input type="checkbox" name="availability" />
+          <input type="checkbox" name="availability" checked={filters.availability} onChange={handleToggelCheckBox} />
           <label>Hide Out Of Stock</label>
         </div>
       </div>
@@ -35,7 +57,7 @@ const Filter = ({ text, filterToggle, setFilterToggle }) => {
         <h3>Type</h3>
         {types.map((item) => (
           <div key={item.id} className="input-box">
-            <input type="checkbox" name="type" />
+            <input type="checkbox" name="type" value={item.name} checked={filters.type.includes(item.name)} onChange={handleToggelCheckBox} />
             <label>{item.name}</label>
           </div>
         ))}
@@ -43,8 +65,8 @@ const Filter = ({ text, filterToggle, setFilterToggle }) => {
       <div className="filter-part" >
         <h3>Rarity</h3>
         {rarity.map((item) => (
-          <div key={item.id} className="input-box">
-            <input type="checkbox" name="rarity" />
+          <div key={item.id} className="input-box" name="rarity">
+            <input type="checkbox" name="rarity" value={item.name} checked={filters.rarity.includes(item.name)} onChange={handleToggelCheckBox} />
             <label>{item.name}</label>
           </div>
         ))}
