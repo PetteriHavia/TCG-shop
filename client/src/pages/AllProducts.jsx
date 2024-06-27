@@ -6,14 +6,14 @@ import { useGetAllCategoriesQuery, useGetCategoryQuery } from "../redux/reducers
 import ProductCard from "../components/ProductCard"
 import useScreenSize from "../hooks/useScreenSize"
 import PageNotFound from "../components/PageNotFound"
+import { useSelector } from "react-redux"
 
 const AllProducts = () => {
+  const filters = useSelector((state) => state.filters)
   const [filterToggle, setFilterToggle] = useState(false)
-  const [filters, setFilters] = useState()
   const windowSize = useScreenSize()
   const { category } = useParams()
   const location = useLocation()
-
 
   const { data: filterData, isLoading: isLoadingFilter } = useGetCategoryQuery({ id: category || "all", filters })
 

@@ -81,7 +81,8 @@ productRouter.get("/", async (request, response, next) => {
   }
 });
 
-productRouter.get("/:slug", async (request, response, next) => {
+productRouter.get("/:category/:slug", async (request, response, next) => {
+  const { category } = request.params
   const slug = request.params.slug.replaceAll(" ", '-')
   try {
     if (mongoose.Types.ObjectId.isValid(slug)) {

@@ -7,18 +7,18 @@ const mongoose = require("mongoose")
 
 categoryRouter.get("/:category/filter", async (request, response, next) => {
   const { category } = request.params;
-  const { amount, rarity, type } = request.query;
-  const filters = {}
+  const { availability, rarity, type } = request.query;
+  const filters = request.query
 
-  if (amount === "true") {
+  if (availability === "false") {
     filters.$or = [
       { 'price.amount': { $gt: 0 } },
       { 'amount': { $gt: 0 } }
     ];
-  } else if (amount === "false") {
+  } else if (availability === "true") {
     filters.$or = [
       { 'price.amount': 0 },
-      { amount: 0 }
+      { 'amount': 0 }
     ];
   }
 
@@ -30,12 +30,17 @@ categoryRouter.get("/:category/filter", async (request, response, next) => {
     filters.type = { $in: type.split(',') };
   }
 
+  console.log(filters)
+
   try {
     if (category == "all") {
       const products = await Product.find(filters)
       return response.status(201).json({ name: "all", products })
     } else {
-      const categoryObject = await Category.findOne({ name: new RegExp(`^${category}$`, 'i') }).populate('products');
+      const categoryObject = await Category.findOne({ name: new RegExp(`^${category}$`, 'i') })
+        .populate({
+          path: 'products', populate: { path: "categories", model: "Category", select: "_id name" }
+        })
       if (!categoryObject) {
         return response.status(404).json({ error: "Category not found" })
       }
@@ -48,21 +53,29 @@ categoryRouter.get("/:category/filter", async (request, response, next) => {
           hasPositiveAmount = product.price > 0
         }
 
-        if (amount === "true" && !hasPositiveAmount && product.amount <= 0) {
+        if (availability === "false" && !hasPositiveAmount && product.amount <= 0) {
           return false
         }
-        if (amount === "false" && (hasPositiveAmount || product.amount > 0)) {
+        if (availability === "true" && (hasPositiveAmount || product.amount > 0)) {
           return false
         }
         if (rarity && !filters.rarity.$in.includes(product.rarity)) {
           return false;
         }
-        if (type && !filters.type.includes(product.type)) {
-          return false
+        if (type) {
+          const typeNames = type.split(',');
+          const productCategoryNames = categoryObject.products
+            .filter(p => p._id.toString() === product._id.toString())
+            .flatMap(p => p.categories.map(cat => cat.name))
+            .filter(Boolean);
+
+          if (!typeNames.some(t => productCategoryNames.includes(t))) {
+            return false;
+          }
         }
         return true
       });
-
+      console.log(filteredProducts)
       return response.status(201).json({ name: categoryObject.name, products: filteredProducts })
     }
   } catch (error) {
@@ -70,6 +83,89 @@ categoryRouter.get("/:category/filter", async (request, response, next) => {
   }
 })
 
+/*
+categoryRouter.get("/:category/filter", async (request, response, next) => {
+  const { category } = request.params;
+  const { availability, rarity, type } = request.query;
+  const filters = {};
+
+  if (availability === "false") {
+    filters.$or = [
+      { 'price.amount': { $gt: 0 } },
+      { 'amount': { $gt: 0 } }
+    ];
+  } else if (availability === "true") {
+    filters.$or = [
+      { 'price.amount': 0 },
+      { 'amount': 0 }
+    ];
+  }
+
+  if (rarity) {
+    filters.rarity = { $in: rarity.split(',') };
+  }
+
+  try {
+    let categoryObject;
+
+    if (category === "all") {
+      if (type) {
+        // Filter products where at least one category name matches the type
+        filters['categories.name'] = { $in: type.split(',') };
+      }
+
+      categoryObject = await Product.find(filters)
+        .populate({
+          path: 'categories',
+          model: 'Category',
+          select: '_id name'
+        });
+
+      return response.status(200).json({ name: "all", products: categoryObject });
+    } else {
+      categoryObject = await Category.findOne({ name: new RegExp(`^${category}$`, 'i') })
+        .populate({
+          path: 'products',
+          populate: { path: "categories", model: "Category", select: "_id name" }
+        });
+
+      if (!categoryObject) {
+        return response.status(404).json({ error: "Category not found" });
+      }
+
+      const filteredProducts = categoryObject.products.filter(product => {
+        // Implement your filtering logic here
+        let includeProduct = true;
+
+        if (availability === "false" && product.amount > 0) {
+          includeProduct = false;
+        } else if (availability === "true" && product.amount <= 0) {
+          includeProduct = false;
+        }
+
+        if (rarity && !product.rarity.includes(rarity)) {
+          includeProduct = false;
+        }
+
+        if (type) {
+          // Check if any category name matches the type filter
+          const typeNames = type.split(',');
+          const productCategoryNames = product.categories.map(cat => cat.name);
+
+          if (!typeNames.some(t => productCategoryNames.includes(t))) {
+            includeProduct = false;
+          }
+        }
+
+        return includeProduct;
+      });
+
+      return response.status(200).json({ name: categoryObject.name, products: filteredProducts });
+    }
+  } catch (error) {
+    next(error);
+  }
+})*/
 
 categoryRouter.get("/:identifier", async (request, response, next) => {
   const identifier = request.params.identifier;
@@ -98,7 +194,7 @@ categoryRouter.get("/:category/:identifier", async (request, response, next) => 
   try {
     const categoryName = await Category.findOne({ name: { $regex: new RegExp(`^${category}$`, 'i') } })
       .populate({
-        path: 'products', populate: { path: "categories", model: "Category", }
+        path: 'products', populate: { path: "categories", model: "Category", select: "_id name" }
       })
     if (!categoryName) {
       return response.status(404).json({ error: "No category found" })
