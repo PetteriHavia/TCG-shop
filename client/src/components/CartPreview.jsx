@@ -1,20 +1,17 @@
-import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux"
 import { MdOutlineShoppingCart } from "react-icons/md"
 import placeholderIMG from "../assets/images/products-header.png"
-import { LiaMinusCircleSolid, LiaPlusCircleSolid, LiaTrashAlt } from "react-icons/lia";
 import { MdClose } from "react-icons/md";
-import { updateCartItemAmount, deleteProductFromCart } from "../redux/reducers/cartReducer";
 import { Link } from "react-router-dom"
 import { formatPath } from "../utils/formatPath";
+import ProductControl from "./ProductControl";
 
 
 const CartPreview = () => {
 
   const cart = useSelector((state) => state.cart)
   const [isOpen, setIsOpen] = useState(false)
-
-  const dispatch = useDispatch()
 
   useEffect(() => {
     if (cart.length === 0) {
@@ -40,19 +37,6 @@ const CartPreview = () => {
     return Math.round(total * 100) / 100
   }
 
-  const controlProductAmount = (action, id, condition) => {
-    const item = cart.find(item => item.id === id && item.condition === condition)
-    console.log(item)
-
-    const newAmount = action === "minus" && item.amount === 1
-      ? dispatch(deleteProductFromCart({ id, condition }))
-      : action === "minus"
-        ? item.amount - 1
-        : Math.min(item.amount + 1, item.inStock)
-
-    dispatch(updateCartItemAmount({ id, condition, amount: newAmount }))
-  }
-
   return (
     <div className="carttest">
       <div className="cart-icons">
@@ -74,14 +58,9 @@ const CartPreview = () => {
                   <div className="cart-item-container">
                     <img src={placeholderIMG} alt="product image" />
                     <div className="cart-item-info">
-                      <Link to={`/products/${formatPath(item.name)}`}>{item.name}</Link>
+                      <Link to={`/products/${item.categories[0]}/${item.slug}`}>{item.name}</Link>
                       <div className="cart-item-action">
-                        <div className="cart-item-amount">
-                          {item.amount === 1 ? <LiaTrashAlt onClick={() => controlProductAmount("minus", item.id, item.condition)} /> :
-                            <LiaMinusCircleSolid onClick={() => controlProductAmount("minus", item.id, item.condition)} />}
-                          <p>{item.amount}</p>
-                          <LiaPlusCircleSolid onClick={() => controlProductAmount("plus", item.id, item.condition)} />
-                        </div>
+                        <ProductControl item={item} />
                         <div className="cart-item-price">
                           <p>{item.discountPrice ? item.discountPrice : item.normalPrice}€</p>
                         </div>
@@ -96,9 +75,9 @@ const CartPreview = () => {
                 <p>{cart.length} products</p>
                 <p>Total: {calculateTotal()}€</p>
               </div>
-              <button>
-                Checkout
-              </button>
+              <Link to="/cart">
+                <button>Checkout</button>
+              </Link>
             </div>
           </div>
         )
