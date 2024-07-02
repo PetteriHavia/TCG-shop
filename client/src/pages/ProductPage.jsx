@@ -60,12 +60,15 @@ const ProductPage = () => {
   }
 
   const handleAddProductToCart = (product) => {
+
     const productValues = {
       id: product.id,
       name: product.productName,
       amount: productAmount,
       inStock: currentItemStock,
       normalPrice: currentItemPrice,
+      categories: product.categories.map((item) => item.name),
+      slug: product.slug,
     }
     if (product.discount > 0) {
       const discount = getDiscountedPrice(currentItemPrice, product.discount)
