@@ -4,6 +4,7 @@ import Navigation from './components/Navigation'
 import ProductPage from './pages/ProductPage'
 import AllProducts from './pages/AllProducts'
 import PageNotFound from './components/PageNotFound'
+import CartPage from './pages/CartPage'
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/products/:category" element={<AllProducts />} />
         <Route path="/products/:category/:identifier" element={<ProductPage />} />
         <Route path="*" element={<PageNotFound />} />
+        <Route path="/cart" element={<CartPage />} />
       </Routes>
     </>
   )

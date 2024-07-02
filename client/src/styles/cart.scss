@@ -130,3 +130,15 @@
   display: flex;
   justify-content: space-between;
 }
+
+.cart-page-item {
+  display: grid;
+  align-items: center;
+  text-align: start;
+  grid-template-columns: repeat(5, 1fr);
+
+  img {
+    width: 100px;
+    height: auto;
+  }
+}
