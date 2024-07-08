@@ -1,8 +1,8 @@
 import { useLocation, useParams } from "react-router-dom"
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import Breadcrumbs from "../components/Breadcrumbs"
 import Filter from "../components/Filter"
-import { useGetAllCategoriesQuery, useGetCategoryQuery } from "../redux/reducers/apiSlice"
+import { useGetCategoryQuery } from "../redux/reducers/apiSlice"
 import ProductCard from "../components/ProductCard"
 import useScreenSize from "../hooks/useScreenSize"
 import PageNotFound from "../components/PageNotFound"
@@ -15,7 +15,7 @@ const AllProducts = () => {
   const { category } = useParams()
   const location = useLocation()
 
-  const { data: filterData, isLoading: isLoadingFilter } = useGetCategoryQuery({ id: category || "all", filters })
+  const { data: filterData, isLoading: isLoadingFilter } = useGetCategoryQuery({ category: category || "all", filters })
 
   const headerText = location.pathname.split("/").filter(item => item !== "").slice(-1)
 
@@ -41,7 +41,7 @@ const AllProducts = () => {
                 :
                 <div className="product-grid">
                   <React.Fragment key={filterData.id}>
-                    {filterData.products.map((product) => (
+                    {filterData.map((product) => (
                       <ProductCard item={product} key={product.id} categoryName={product.categories[0].name} />
                     ))}
                   </React.Fragment>
