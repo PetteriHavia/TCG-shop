@@ -10,7 +10,7 @@ const Filter = ({ filterToggle, setFilterToggle }) => {
   const dispatch = useDispatch()
 
   const types = [
-    { id: 1, name: "Single Card", },
+    { id: 1, name: "Single card", },
     { id: 2, name: "Booster", },
     { id: 3, name: "Tin Box", },
     { id: 4, name: "Elite Trainer Box", }
@@ -20,7 +20,9 @@ const Filter = ({ filterToggle, setFilterToggle }) => {
     { id: 1, name: "Common", },
     { id: 2, name: "Uncommon", },
     { id: 3, name: "Rare", },
-    { id: 4, name: "Ultra Rare" }
+    { id: 4, name: "Holo Rare" },
+    { id: 5, name: "Ultra Rare" },
+    { id: 6, name: "Illustration Rare" }
   ]
 
   const handleToggelCheckBox = (e) => {
