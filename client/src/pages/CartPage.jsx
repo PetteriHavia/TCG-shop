@@ -6,6 +6,26 @@ const CartPage = () => {
 
   const cart = useSelector((state) => state.cart)
 
+  const calcProductTotal = (price, amount) => {
+    return price * amount
+  }
+
+  const calcCartSubtotal = () => {
+    return cart.reduce((acc, curr) => {
+      if (curr.discountPrice) {
+        return acc + (curr.discountPrice * curr.amount)
+      } else {
+        return acc + (curr.normalPrice * curr.amount)
+      }
+    }, 0)
+  }
+
+  const calcCartTotal = () => {
+    // Currently, there are no additional costs, so total equals subtotal
+    return calcCartSubtotal()
+  }
+
+
   return (
     <section className='container-md'>
       <div className="cart-page-header">
@@ -27,15 +47,28 @@ const CartPage = () => {
                 </div>
                 <ProductControl item={product} />
                 {product.discountPrice ? (
-                  <p>{product.discountPrice * product.amount}€</p>
+                  <p>{calcProductTotal(product.discountPrice, product.amount)}€</p>
                 ) : (
-                  <p>{product.normalPrice * product.amount}€</p>
+                  <p>{calcProductTotal(product.normalPrice, product.amount)}€</p>
                 )}
               </div>
             ))
           ) : (
-            null
+            <p>Your cart is empty</p>
           )}
+        </div>
+        <div className="cart-page-summary">
+          <h2>Total Amount</h2>
+          <h3>Cart</h3>
+          <div className="summary-row">
+            <h4>Subtotal</h4>
+            <h4>{calcCartSubtotal()}€</h4>
+          </div>
+          <div className="summary-row">
+            <h4>Total</h4>
+            <h4>{calcCartTotal()}€</h4>
+          </div>
+          <button className="summary-button">Checkout</button>
         </div>
       </div>
     </section>
