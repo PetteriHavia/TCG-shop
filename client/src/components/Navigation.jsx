@@ -49,21 +49,14 @@ const Navigation = () => {
           heading: "Expansion",
           submenu: groupedCategories?.Expansion?.map(category => ({
             label: category.name,
-            link: `products/${category.id}`
+            link: `products/${category.name}`
           }))
         },
         {
           heading: "Pokemon Products",
           submenu: groupedCategories?.['Pokemon Products']?.map(category => ({
             label: category.name,
-            link: `products/${category.id}`
-          }))
-        },
-        {
-          heading: "Pokemon Products",
-          submenu: groupedCategories?.['Pokemon Products']?.map(category => ({
-            label: category.name,
-            link: `products/${category.id}`
+            link: `products/${category.name}`
           }))
         },
       ],
@@ -75,7 +68,7 @@ const Navigation = () => {
           heading: "Expansion",
           submenu: groupedCategories?.Expansion?.map(category => ({
             label: category.name,
-            link: `products/${category.id}`
+            link: `products/Single-card/${category.name}`
           }))
         }
       ],
@@ -91,30 +84,32 @@ const Navigation = () => {
   }
 
   return (
-    <nav>
-      <IconContext.Provider value={{ size: "2rem" }} >
-        <div className="menu" ref={menuRef}>
-          <MdMenu className="menu-icon" onClick={() => setIsOpen(true)} />
-          <img src="#" alt="Logo" />
-          {!isLoading ?
-            <ul className={isOpen ? "is-active" : ""}>
-              {windowSize.width <= 992 ? <li className="close-icon"><MdClose onClick={() => setIsOpen(false)} /></li> : null}
-              {menuItems.map((item, index) => (
-                <MenuItem key={index} item={item} index={index} activeIndex={activeIndex} onItemClick={() => handleMenuIndex(index)} />
-              ))}
-            </ul>
-            : null}
-        </div>
-        <div className="nav-actions">
-          <div className="nav-search">
-            <div className={`search-bar ${toggle ? "search-active" : ""}`}>
-              {toggle ? <input type="text" placeholder="Search product..." /> : null}
-              <MdSearch onClick={() => setToggle(!toggle)} />
-            </div>
+    <nav className="top-navigation">
+      <div className="container-md">
+        <IconContext.Provider value={{ size: "2rem" }} >
+          <div className="menu" ref={menuRef}>
+            <img src="#" alt="Logo" />
+            <MdMenu className="menu-icon" onClick={() => setIsOpen(true)} />
+            {!isLoading ?
+              <ul className={isOpen ? "is-active" : ""}>
+                {windowSize.width <= 992 ? <li className="close-icon"><MdClose onClick={() => setIsOpen(false)} /></li> : null}
+                {menuItems.map((item, index) => (
+                  <MenuItem key={index} item={item} index={index} activeIndex={activeIndex} onItemClick={() => handleMenuIndex(index)} />
+                ))}
+              </ul>
+              : null}
           </div>
-          <CartPreview />
-        </div>
-      </IconContext.Provider>
+          <div className="nav-actions">
+            <div className="nav-search">
+              <div className={`search-bar ${toggle ? "search-active" : ""}`}>
+                {toggle ? <input type="text" placeholder="Search product..." /> : null}
+                <MdSearch onClick={() => setToggle(!toggle)} />
+              </div>
+            </div>
+            <CartPreview />
+          </div>
+        </IconContext.Provider>
+      </div>
     </nav >
   )
 }
