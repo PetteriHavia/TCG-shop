@@ -4,7 +4,7 @@ import useScreenSize from "../hooks/useScreenSize"
 import { useDispatch, useSelector } from "react-redux"
 import { setAvailability, setRarity, setType } from "../redux/reducers/filterReducer"
 
-const Filter = ({ filterToggle, setFilterToggle }) => {
+const Filter = ({ filterToggle, setFilterToggle, setName }) => {
   const windowSize = useScreenSize()
   const filters = useSelector((state) => state.filters)
   const dispatch = useDispatch()
@@ -55,15 +55,17 @@ const Filter = ({ filterToggle, setFilterToggle }) => {
           <label>Hide Out Of Stock</label>
         </div>
       </div>
-      <div className="filter-part" >
-        <h3>Type</h3>
-        {types.map((item) => (
-          <div key={item.id} className="input-box">
-            <input type="checkbox" name="type" value={item.name} checked={filters.type.includes(item.name)} onChange={handleToggelCheckBox} />
-            <label>{item.name}</label>
-          </div>
-        ))}
-      </div>
+      {!setName ?
+        <div className="filter-part" >
+          <h3>Type</h3>
+          {types.map((item) => (
+            <div key={item.id} className="input-box">
+              <input type="checkbox" name="type" value={item.name} checked={filters.type.includes(item.name)} onChange={handleToggelCheckBox} />
+              <label>{item.name}</label>
+            </div>
+          ))}
+        </div>
+        : null}
       <div className="filter-part" >
         <h3>Rarity</h3>
         {rarity.map((item) => (
