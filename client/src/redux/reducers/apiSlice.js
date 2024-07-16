@@ -14,10 +14,15 @@ export const shopApi = createApi({
       query: ({ category, identifier }) => `categories/${category}/${identifier}`,
     }),
     getCategory: builder.query({
-      query: ({ category, filters }) => {
-        const params = new URLSearchParams(filters).toString()
+      query: ({ category, filters, setName }) => {
+        const params = new URLSearchParams(filters)
+
+        const queryUrl = setName
+          ? `categories/Single-card/${setName}?`
+          : `categories/${category}/filter?`
+
         return {
-          url: `categories/${category}/filter?${params}`,
+          url: `${queryUrl}${params.toString()}`,
         }
       }
     }),
@@ -29,4 +34,5 @@ export const {
   useGetProductStatusQuery,
   useGetSingleProductQuery,
   useGetCategoryQuery,
+  useGetSingleCardSetQuery,
 } = shopApi
