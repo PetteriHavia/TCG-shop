@@ -10,7 +10,7 @@ const Breadcrumbs = () => {
     .map(item => {
       const decodedItem = decodeURIComponent(item)
       const formatedItem = decodedItem.replace(/-/g, ' ')
-      currentLink += `/${decodedItem}`
+      currentLink += `/${formatedItem}`
       return (
         <li className="crumb" key={item}>
           <span>
