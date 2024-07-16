@@ -15,6 +15,7 @@ function App() {
         <Route exec path="/" element={<Home />} />
         <Route path="/products" element={<AllProducts />} />
         <Route path="/products/:category" element={<AllProducts />} />
+        <Route path="/products/Single-card/:setName" element={<AllProducts />} />
         <Route path="/products/:category/:identifier" element={<ProductPage />} />
         <Route path="*" element={<PageNotFound />} />
         <Route path="/cart" element={<CartPage />} />

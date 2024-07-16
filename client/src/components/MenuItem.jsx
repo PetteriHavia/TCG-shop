@@ -3,9 +3,6 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { useState } from "react";
 
 const MenuItem = ({ item, index, onItemClick, activeIndex }) => {
-
-
-
   return (
     <li onClick={onItemClick} className={index === activeIndex ? "active" : ""}>
       <div className="nav-item-content">
@@ -20,7 +17,7 @@ const MenuItem = ({ item, index, onItemClick, activeIndex }) => {
               <div key={index} className="dropdown-item">
                 <p>{children.heading}</p>
                 {children.submenu?.map((sub, index) => (
-                  <Link key={index} className="sub-link">{sub.label}</Link>
+                  <Link to={sub.link} key={index} className="sub-link">{sub.label}</Link>
                 ))}
               </div>
             ))}

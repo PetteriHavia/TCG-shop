@@ -12,15 +12,16 @@ const AllProducts = () => {
   const filters = useSelector((state) => state.filters)
   const [filterToggle, setFilterToggle] = useState(false)
   const windowSize = useScreenSize()
-  const { category } = useParams()
+  const { category, setName } = useParams()
   const location = useLocation()
 
-  const { data: filterData, isLoading: isLoadingFilter } = useGetCategoryQuery({ category: category || "all", filters })
+  const { data: filterData, isLoading: isLoadingFilter } = useGetCategoryQuery({ category: category || "all", filters, setName })
 
-  const headerText = location.pathname.split("/").filter(item => item !== "").slice(-1)
+  const headerText = category || setName
+    ? decodeURIComponent(location.pathname.split("/").filter(item => item !== "").slice(-1))
+    : "all"
 
   const isInvalidCategory = !isLoadingFilter && !filterData && category;
-
   return (
     <section className="container-md">
       {isInvalidCategory ?
@@ -29,11 +30,11 @@ const AllProducts = () => {
         <>
           <Breadcrumbs />
           <div className="url-header">
-            <h2>{filterData?.name}</h2>
+            <h2>{headerText}</h2>
           </div>
           {windowSize.width > 992 ? null : <button onClick={() => setFilterToggle(true)}>Filter</button>}
           <div className="search-layout">
-            <Filter text={headerText} filterToggle={filterToggle} setFilterToggle={setFilterToggle} />
+            <Filter filterToggle={filterToggle} setFilterToggle={setFilterToggle} setName={setName} />
             {isLoadingFilter ?
               <div>Loading...</div>
               : filterData && filterData.length === 0 ?
