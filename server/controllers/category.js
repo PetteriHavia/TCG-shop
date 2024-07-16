@@ -5,10 +5,50 @@ const Product = require("../models/product")
 const { checkExistingDuplicate } = require("../utils/checkExistingDuplicate")
 const mongoose = require("mongoose")
 
+
+categoryRouter.get('/Single-card/:setName', async (request, response, next) => {
+  const { setName } = request.params
+  const { availability, rarity } = request.query;
+
+  try {
+    const singleCardCategory = await Category.findOne({ name: "Single card" })
+
+    if (!singleCardCategory) {
+      return response.status(404).json({ error: "Single card category not found" })
+    }
+
+    let filterCriteria = [{ categories: singleCardCategory._id }, { setName }]
+
+    if (availability === "true") {
+      filterCriteria.push({
+        $or: [
+          { 'price.amount': { $gt: 0 } },
+          { 'amount': { $gt: 0 } }
+        ]
+      });
+    }
+
+    if (rarity) {
+      const raritiesArray = rarity.split(',');
+      filterCriteria.push({ rarity: { $in: raritiesArray } });
+    }
+
+    const query = { $and: filterCriteria };
+
+    const products = await Product.find(query);
+
+    response.status(200).json(products);
+
+  } catch (error) {
+    next(error)
+  }
+})
+
+
 categoryRouter.get('/:category/filter', async (request, response, next) => {
   try {
     const { category } = request.params;
-    const { availability, type, rarity } = request.query;
+    const { availability, type, rarity, setName } = request.query;
 
     let filterCriteria = [];
 
@@ -46,6 +86,11 @@ categoryRouter.get('/:category/filter', async (request, response, next) => {
     if (rarity) {
       const raritiesArray = rarity.split(',');
       filterCriteria.push({ rarity: { $in: raritiesArray } });
+    }
+
+    //Handle setName filtering
+    if (setName) {
+      filterCriteria.push({ setName });
     }
 
     let query = {};
