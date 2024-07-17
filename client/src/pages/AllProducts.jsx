@@ -7,10 +7,13 @@ import ProductCard from "../components/ProductCard"
 import useScreenSize from "../hooks/useScreenSize"
 import PageNotFound from "../components/PageNotFound"
 import { useSelector } from "react-redux"
+import Footer from "../components/Footer"
+import GridControl from "../components/GridControl"
 
 const AllProducts = () => {
   const filters = useSelector((state) => state.filters)
   const [filterToggle, setFilterToggle] = useState(false)
+  const [gridType, setGridType] = useState("grid")
   const windowSize = useScreenSize()
   const { category, setName } = useParams()
   const location = useLocation()
@@ -23,35 +26,39 @@ const AllProducts = () => {
 
   const isInvalidCategory = !isLoadingFilter && !filterData && category;
   return (
-    <section className="container-md">
-      {isInvalidCategory ?
-        <PageNotFound />
-        :
-        <>
-          <Breadcrumbs />
-          <div className="url-header">
-            <h2>{headerText}</h2>
-          </div>
-          {windowSize.width > 992 ? null : <button onClick={() => setFilterToggle(true)}>Filter</button>}
-          <div className="search-layout">
-            <Filter filterToggle={filterToggle} setFilterToggle={setFilterToggle} setName={setName} />
-            {isLoadingFilter ?
-              <div>Loading...</div>
-              : filterData && filterData.length === 0 ?
-                <div>No products available</div>
-                :
-                <div className="product-grid">
-                  <React.Fragment key={filterData.id}>
-                    {filterData.map((product) => (
-                      <ProductCard item={product} key={product.id} categoryName={product.categories[0].name} />
-                    ))}
-                  </React.Fragment>
-                </div>
-            }
-          </div>
-        </>
-      }
-    </section>
+    <>
+      <section className="container-md">
+        {isInvalidCategory ?
+          <PageNotFound />
+          :
+          <>
+            <Breadcrumbs />
+            <div className="url-header">
+              <h2>{headerText}</h2>
+            </div>
+            <GridControl gridType={gridType} setGridType={setGridType} />
+            {windowSize.width > 992 ? null : <button onClick={() => setFilterToggle(true)}>Filter</button>}
+            <div className="search-layout">
+              <Filter filterToggle={filterToggle} setFilterToggle={setFilterToggle} setName={setName} />
+              {isLoadingFilter ?
+                <div>Loading...</div>
+                : filterData && filterData.length === 0 ?
+                  <div>No products available</div>
+                  :
+                  <div className={gridType === "grid" ? "product-grid" : "list"}>
+                    <React.Fragment key={filterData.id}>
+                      {filterData.map((product) => (
+                        <ProductCard item={product} key={product.id} categoryName={product.categories[0].name} />
+                      ))}
+                    </React.Fragment>
+                  </div>
+              }
+            </div>
+          </>
+        }
+      </section>
+      <Footer />
+    </>
   )
 }
 export default AllProducts

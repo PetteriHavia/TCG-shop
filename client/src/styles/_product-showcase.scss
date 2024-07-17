@@ -62,11 +62,29 @@
   }
 }
 
+.list {
+  display: grid;
+  width: 100%;
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    img {
+      max-width: 200px;
+    }
+  }
+
+  .product-details {
+    text-align: left;
+  }
+}
+
 .product-details {
   font-size: 1.5rem;
   text-decoration: none;
   text-align: center;
-  padding-top: 1rem;
+  padding-bottom: 1rem;
 
   a,
   p {

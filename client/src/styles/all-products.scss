@@ -1,7 +1,6 @@
 .url-header h2 {
   font-size: 2.5rem;
   font-weight: 500;
-  padding-bottom: 2rem;
   text-transform: capitalize;
 }
 
@@ -20,6 +19,9 @@
   border: 1px solid rgb(170, 170, 170);
   padding: 1.5rem;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .filter-part {
@@ -32,7 +34,57 @@
 .input-box {
   input {
     margin-right: 0.5rem;
+    cursor: pointer;
   }
+}
+
+//GridControl
+
+.grid-control-container {
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 2.5rem;
+}
+
+.grid-template-control {
+  display: flex;
+  gap: 1rem;
+
+  button {
+    @include primary-button(#fff);
+    padding: 0.5rem;
+    border: 2px solid $metal-black;
+
+    &.active {
+      background: $metal-black;
+
+      svg {
+        color: white;
+      }
+    }
+
+    span {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  svg {
+    width: 25px;
+    height: 25px;
+    color: black;
+  }
+
+  select {
+    margin-left: 2rem;
+  }
+}
+
+.grid-type {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media (max-width: 992px) {
