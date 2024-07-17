@@ -2,7 +2,7 @@
 import { MdClose } from "react-icons/md"
 import useScreenSize from "../hooks/useScreenSize"
 import { useDispatch, useSelector } from "react-redux"
-import { setAvailability, setRarity, setType } from "../redux/reducers/filterReducer"
+import { setAvailability, setRarity, setType, setStatus } from "../redux/reducers/filterReducer"
 
 const Filter = ({ filterToggle, setFilterToggle, setName }) => {
   const windowSize = useScreenSize()
@@ -14,6 +14,11 @@ const Filter = ({ filterToggle, setFilterToggle, setName }) => {
     { id: 2, name: "Booster", },
     { id: 3, name: "Tin Box", },
     { id: 4, name: "Elite Trainer Box", }
+  ]
+
+  const status = [
+    { id: 1, name: "New" },
+    { id: 2, name: "Sale" }
   ]
 
   const rarity = [
@@ -37,6 +42,9 @@ const Filter = ({ filterToggle, setFilterToggle, setName }) => {
       case "rarity":
         dispatch(setRarity(value))
         break;
+      case "status":
+        dispatch(setStatus(value))
+        break;
       default:
         break
     }
@@ -54,6 +62,15 @@ const Filter = ({ filterToggle, setFilterToggle, setName }) => {
           <input type="checkbox" name="availability" checked={filters.availability} onChange={handleToggelCheckBox} />
           <label>Hide Out Of Stock</label>
         </div>
+      </div>
+      <div className="filter-part">
+        <h3>Product Selection</h3>
+        {status.map((item) => (
+          <div key={item.id} className="input-box">
+            <input type="checkbox" name="status" value={item.name} checked={filters.status.includes(item.name)} onChange={handleToggelCheckBox} />
+            <label>{item.name}</label>
+          </div>
+        ))}
       </div>
       {!setName ?
         <div className="filter-part" >
