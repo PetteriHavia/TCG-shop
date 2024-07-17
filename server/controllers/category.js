@@ -8,7 +8,7 @@ const mongoose = require("mongoose")
 
 categoryRouter.get('/Single-card/:setName', async (request, response, next) => {
   const { setName } = request.params
-  const { availability, rarity } = request.query;
+  const { availability, rarity, status } = request.query;
 
   try {
     const singleCardCategory = await Category.findOne({ name: "Single card" })
@@ -33,6 +33,11 @@ categoryRouter.get('/Single-card/:setName', async (request, response, next) => {
       filterCriteria.push({ rarity: { $in: raritiesArray } });
     }
 
+    if (status) {
+      const statusArray = status.split(',');
+      filterCriteria.push({ status: { $in: statusArray } });
+    }
+
     const query = { $and: filterCriteria };
 
     const products = await Product.find(query);
@@ -48,11 +53,9 @@ categoryRouter.get('/Single-card/:setName', async (request, response, next) => {
 categoryRouter.get('/:category/filter', async (request, response, next) => {
   try {
     const { category } = request.params;
-    const { availability, type, rarity, setName } = request.query;
+    const { availability, type, rarity, setName, status } = request.query;
 
     let filterCriteria = [];
-
-    console.log(category)
 
     // Handle category filtering
     if (category && category !== 'all') {
@@ -91,6 +94,11 @@ categoryRouter.get('/:category/filter', async (request, response, next) => {
     //Handle setName filtering
     if (setName) {
       filterCriteria.push({ setName });
+    }
+
+    if (status) {
+      const statusArray = status.split(',');
+      filterCriteria.push({ status: { $in: statusArray } });
     }
 
     let query = {};

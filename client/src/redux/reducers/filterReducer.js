@@ -7,6 +7,7 @@ const filterSlice = createSlice({
     availability: false,
     type: [],
     rarity: [],
+    status: [],
   },
   reducers: ({
     setAvailability: (state, action) => {
@@ -26,8 +27,15 @@ const filterSlice = createSlice({
         state.rarity = [...state.rarity, action.payload]
       }
     },
+    setStatus: (state, action) => {
+      if (state.status.includes(action.payload)) {
+        state.status = state.status.filter((item) => item !== action.payload)
+      } else {
+        state.status = [...state.status, action.payload]
+      }
+    }
   })
 })
 
-export const { setAvailability, setRarity, setType } = filterSlice.actions;
+export const { setAvailability, setRarity, setType, setStatus } = filterSlice.actions;
 export default filterSlice.reducer
