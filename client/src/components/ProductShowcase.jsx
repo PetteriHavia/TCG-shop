@@ -1,13 +1,23 @@
+import { useDispatch } from 'react-redux'
 import ProductCard from './ProductCard'
+import { setStatus } from '../redux/reducers/filterReducer'
+import { Link } from 'react-router-dom'
 
-const ProductShowcase = ({ products, header }) => {
+const ProductShowcase = ({ products, header, status }) => {
+  const dispatch = useDispatch()
+
+  const handleUpdateFilterStatus = () => {
+    dispatch(setStatus(status))
+  }
 
   return (
     <section>
       <div className="container-md">
         <div className="header-row">
           <h2>{header}</h2>
-          <button>See All</button>
+          <Link to={`/products`}>
+            <button onClick={handleUpdateFilterStatus}>See All</button>
+          </Link>
         </div>
         <div className="product-grid">
           {products.map((item) => (
