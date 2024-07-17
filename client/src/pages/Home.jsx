@@ -13,8 +13,8 @@ const Home = () => {
   return (
     <>
       <Hero />
-      {saleProductData && <ProductShowcase products={saleProductData} header={"Special Offers"} />}
-      {newProductData && <ProductShowcase products={newProductData} header={"New Products"} />}
+      {saleProductData && <ProductShowcase products={saleProductData} header={"Special Offers"} status={"Sale"} />}
+      {newProductData && <ProductShowcase products={newProductData} header={"New Products"} status={"New"} />}
       <ServiceDetails />
       <Footer />
     </>
