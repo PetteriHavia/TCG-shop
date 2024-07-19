@@ -1,9 +1,12 @@
+.product-page-preview {
+  min-height: 800px;
+}
+
 .product-container {
   display: flex;
   justify-content: space-between;
   gap: 2rem;
   align-items: flex-start;
-  padding: 5rem 0rem;
 
   img {
     max-width: 500px;
@@ -125,6 +128,7 @@
 @media (max-width: 1050px) {
   .product-container {
     justify-content: space-evenly;
+    height: 100%;
 
     .product-layout {
       width: 100%;

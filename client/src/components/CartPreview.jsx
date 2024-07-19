@@ -4,7 +4,6 @@ import { MdOutlineShoppingCart } from "react-icons/md"
 import placeholderIMG from "../assets/images/products-header.png"
 import { MdClose } from "react-icons/md";
 import { Link } from "react-router-dom"
-import { formatPath } from "../utils/formatPath";
 import ProductControl from "./ProductControl";
 
 
