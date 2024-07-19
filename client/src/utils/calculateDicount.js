@@ -1,17 +1,20 @@
+export const formatPrice = (num) => {
+  return num.toFixed(2).replace('.', ',');
+}
 
 export const getPrice = (product) => {
   if (Array.isArray(product.price)) {
-    return product.price.length > 0 ? product.price[0].price.toFixed(2) : null
+    return product.price.length > 0 ? (product.price[0].price) : null;
   }
-  return product.price.toFixed(2)
+  return product.price;
 }
 
 export const getDiscountSum = (price, discount) => {
-  const sum = price / 100 * discount
-  return sum.toFixed(2)
+  const sum = (price * discount) / 100;
+  return sum;
 }
 
 export const getDiscountedPrice = (price, discount) => {
-  const discountedPrice = price - (discount * price / 100).toFixed(2)
-  return discountedPrice
+  const discountedPrice = price - (discount * price / 100);
+  return discountedPrice;
 }
