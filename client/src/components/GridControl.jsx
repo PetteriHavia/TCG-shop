@@ -1,7 +1,6 @@
-import React from 'react'
 import { FiGrid, FiList } from "react-icons/fi";
 
-const GridControl = ({ gridType, setGridType }) => {
+const GridControl = ({ gridType, setGridType, setSelectDropdownItem }) => {
 
   const gridOptions = [
     { type: 'grid', icon: <FiGrid /> },
@@ -13,6 +12,11 @@ const GridControl = ({ gridType, setGridType }) => {
     { type: "Price: High to Low" },
     { type: "Price: Low to High" },
   ]
+
+  const handleFilter = (e) => {
+    setSelectDropdownItem(e.target.value)
+  }
+
 
   return (
     <div className="grid-control-container">
@@ -26,9 +30,9 @@ const GridControl = ({ gridType, setGridType }) => {
             <span>{item.icon}</span>
           </button>
         ))}
-        <select>
+        <select onChange={handleFilter}>
           {selectOptions.map((option) => (
-            <option key={option.type}>{option.type}</option>
+            <option key={option.type} value={option.type}>{option.type}</option>
           ))}
         </select>
       </div>

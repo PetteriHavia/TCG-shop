@@ -54,6 +54,7 @@
     @include primary-button(#fff);
     padding: 0.5rem;
     border: 2px solid $metal-black;
+    border-radius: 0;
 
     &.active {
       background: $metal-black;
@@ -78,6 +79,9 @@
 
   select {
     margin-left: 2rem;
+    padding-left: 1rem;
+    width: 180px;
+    font-size: 1rem;
   }
 }
 
