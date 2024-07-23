@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom"
 import { useGetSingleProductQuery } from "../redux/reducers/apiSlice";
-import placeholderIMG from '../assets/images/products-header.png'
 import { useEffect, useState } from "react";
 import ProductVersionList from "../components/ProductVersionList";
 import { getDiscountedPrice, getDiscountSum } from "../utils/calculateDicount";
@@ -70,6 +69,7 @@ const ProductPage = () => {
       normalPrice: currentItemPrice,
       categories: product.categories.map((item) => item.name),
       slug: product.slug,
+      image: product.image,
     }
     if (product.discount > 0) {
       const discount = getDiscountedPrice(currentItemPrice, product.discount)
@@ -101,7 +101,7 @@ const ProductPage = () => {
               <Breadcrumbs params={identifier} />
               <div className="box">
                 <div className="product-container">
-                  <img src={placeholderIMG} alt="product image" />
+                  <img src={`http://localhost:3003/media/${product.image}`} alt="product image" />
                   <div className="product-layout">
                     <div className="product-info">
                       <div className="column">
