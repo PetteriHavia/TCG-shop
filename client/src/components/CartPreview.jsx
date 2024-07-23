@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux"
 import { MdOutlineShoppingCart } from "react-icons/md"
-import placeholderIMG from "../assets/images/products-header.png"
 import { MdClose } from "react-icons/md";
 import { Link } from "react-router-dom"
 import ProductControl from "./ProductControl";
@@ -55,7 +54,7 @@ const CartPreview = () => {
               {cart.map((item) => (
                 <div key={`${item.name}-${item.condition ?? 'no-condition'}`}>
                   <div className="cart-item-container">
-                    <img src={placeholderIMG} alt="product image" />
+                    <img src={`http://localhost:3003/media/${item.image}`} alt="product image" />
                     <div className="cart-item-info">
                       <Link to={`/products/${item.categories[0]}/${item.slug}`}>{item.name}</Link>
                       <div className="cart-item-action">

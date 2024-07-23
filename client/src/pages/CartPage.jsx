@@ -1,5 +1,4 @@
 import { useSelector } from 'react-redux'
-import placeholderIMG from '../assets/images/products-header.png'
 import ProductControl from '../components/ProductControl'
 
 const CartPage = () => {
@@ -36,7 +35,7 @@ const CartPage = () => {
           {cart.length > 0 ? (
             cart.map((product) => (
               <div className="cart-page-item" key={`${product.id}-${product.condition ?? 'no-condition'}`}>
-                <img src={placeholderIMG} alt="product image" />
+                <img src={`http://localhost:3003/media/${product.image}`} alt="product image" />
                 <h4>{product.name}</h4>
                 <div className="cart-page-product-price">
                   {product.discountPrice ? (
