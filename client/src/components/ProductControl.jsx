@@ -4,7 +4,7 @@ import { updateCartItemAmount, deleteProductFromCart } from "../redux/reducers/c
 
 const ProductControl = ({ item }) => {
   const dispatch = useDispatch()
-  console.log(item)
+
   const controlProductAmount = (action, id, condition) => {
     const newAmount = action === "minus" && item.amount === 1
       ? dispatch(deleteProductFromCart({ id, condition }))
