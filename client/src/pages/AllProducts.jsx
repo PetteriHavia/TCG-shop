@@ -14,7 +14,7 @@ import GridControl from "../components/GridControl";
 const AllProducts = () => {
   const filters = useSelector((state) => state.filters);
   const [filterToggle, setFilterToggle] = useState(false);
-  const [gridType, setGridType] = useState("grid");
+  const [gridType, setGridType] = useState("product-grid");
   const [selectDropdownItem, setSelectDropdownItem] = useState("A - Z");
   const windowSize = useScreenSize();
   const { category, setName } = useParams();
@@ -101,7 +101,7 @@ const AllProducts = () => {
               ) : filterData && filterData.length === 0 ? (
                 <div>No products available</div>
               ) : (
-                <div className={gridType === "grid" ? "product-grid" : "list"}>
+                <div className={gridType}>
                   <React.Fragment key={filterData.id}>
                     {sortData.map((product) => (
                       <ProductCard

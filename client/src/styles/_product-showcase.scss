@@ -28,7 +28,7 @@
   height: 100%;
   img {
     width: 100%;
-    height: 100%;
+    height: 200px;
     max-height: 250px;
     object-fit: contain;
   }
@@ -69,16 +69,20 @@
   }
 }
 
-.list {
+.product-list {
   display: grid;
   width: 100%;
 
   .card {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
     img {
-      max-width: 200px;
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
     }
   }
 
@@ -105,7 +109,7 @@
   }
 
   p:not(.discount-sticker) {
-    height: 5rem;
+    flex: 1;
   }
 }
 
