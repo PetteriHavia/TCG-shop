@@ -3,8 +3,8 @@ import { FiGrid, FiList } from "react-icons/fi";
 const GridControl = ({ gridType, setGridType, setSelectDropdownItem }) => {
 
   const gridOptions = [
-    { type: 'grid', icon: <FiGrid /> },
-    { type: 'list', icon: <FiList /> }
+    { type: 'product-grid', icon: <FiGrid /> },
+    { type: 'product-list', icon: <FiList /> }
   ]
 
   const selectOptions = [
