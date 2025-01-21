@@ -5,7 +5,6 @@ const Footer = () => {
     <footer>
       <div className="container-md footer">
         <div className="footer-column">
-          <img src="#" alt="Logo" />
           <p>Sign up for tcgstore.com newsletter</p>
           <div className="email-box">
             <input type="email" placeholder="example@email.com" />

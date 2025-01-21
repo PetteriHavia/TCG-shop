@@ -5,12 +5,14 @@ import ProductPage from './pages/ProductPage'
 import AllProducts from './pages/AllProducts'
 import PageNotFound from './components/PageNotFound'
 import CartPage from './pages/CartPage'
+import ScrollToTop from './components/ScrollToTop'
 
 
 function App() {
   return (
     <>
       <Navigation />
+      <ScrollToTop />
       <Routes>
         <Route exec path="/" element={<Home />} />
         <Route path="/products" element={<AllProducts />} />

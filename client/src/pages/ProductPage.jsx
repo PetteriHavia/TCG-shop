@@ -9,6 +9,7 @@ import { addItemsToCart, updateCartItemAmount } from "../redux/reducers/cartRedu
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import PageNotFound from "../components/PageNotFound";
 import Footer from "../components/Footer";
+import { formatPrice } from "../utils/calculateDicount";
 
 const ProductPage = () => {
 
@@ -108,8 +109,8 @@ const ProductPage = () => {
                         <h2>{product.productName}</h2>
                         {product.discount > 0 ?
                           <div className="discount-information">
-                            <h3>{getDiscountedPrice(currentItemPrice, product.discount)}€</h3>
-                            <span>Save: <span>{product.discount}% </span><span>({getDiscountSum(currentItemPrice, product.discount)}€)</span></span>
+                            <h3>{formatPrice(getDiscountedPrice(currentItemPrice, product.discount))}€</h3>
+                            <span>Save: <span>{product.discount}% </span><span>({formatPrice(getDiscountSum(currentItemPrice, product.discount))}€)</span></span>
                           </div>
                           :
                           <h3>{currentItemPrice.toFixed(2)}€</h3>

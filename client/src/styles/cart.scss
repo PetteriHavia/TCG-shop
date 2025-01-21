@@ -60,8 +60,9 @@
   padding-bottom: 1.5rem;
   img {
     max-width: 70px;
+    width: 100%;
     object-fit: contain;
-    height: auto;
+    height: 80px;
   }
 }
 
@@ -135,11 +136,14 @@
   display: grid;
   align-items: center;
   text-align: start;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: 1fr 2fr 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
 
   img {
     width: 100px;
-    height: auto;
+    height: 100px;
+    object-fit: contain;
   }
 }
 
@@ -154,6 +158,7 @@
 .cart-page-content {
   display: grid;
   grid-template-columns: 3fr 1fr;
+  gap: 3rem;
 }
 
 .cart-page-summary {
@@ -163,6 +168,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  height: auto;
 
   h3 {
     width: 100%;
@@ -180,4 +186,44 @@
 .summary-button {
   @include primary-button($deep-blue);
   padding: 0.5rem 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .cart-page-content {
+    grid-template-columns: 1fr;
+  }
+  .cart-page-summary {
+    max-width: none;
+  }
+}
+
+.cart-page-price-control {
+  display: flex;
+  gap: 2rem;
+}
+
+@media (max-width: 600px) {
+  .cart-page-item {
+    grid-template-areas:
+      "product title"
+      "product price "
+      "product control";
+    grid-template-columns: 1fr 2fr;
+    gap: 0.5rem;
+  }
+
+  .cart-page-item img {
+    grid-area: product;
+  }
+
+  .cart-page-item h4 {
+    grid-area: title;
+  }
+
+  .cart-page-product-price {
+    grid-area: price;
+  }
+  .cart-page-price-control {
+    grid-area: control;
+  }
 }
