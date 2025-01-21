@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux'
 import ProductControl from '../components/ProductControl'
+import { formatPrice } from '../utils/calculateDicount'
 
 const CartPage = () => {
 
@@ -24,6 +25,17 @@ const CartPage = () => {
     return calcCartSubtotal()
   }
 
+  const formattedCart = cart.map((product) => {
+    const price = product.discountPrice || product.normalPrice
+    const totalPrice = calcProductTotal(price, product.amount)
+    return {
+      ...product,
+      formattedPricePrice: formatPrice(price),
+      formattedTotal: formatPrice(totalPrice),
+      formattedDiscount: product.discountPrice ? formatPrice(product.discountPrice) : formatPrice(product.normalPrice),
+      formattedNormal: formatPrice(product.normalPrice)
+    }
+  })
 
   return (
     <section className='container-md'>
@@ -33,23 +45,21 @@ const CartPage = () => {
       <div className="cart-page-content">
         <div className="cart-page-list">
           {cart.length > 0 ? (
-            cart.map((product) => (
+            formattedCart.map((product) => (
               <div className="cart-page-item" key={`${product.id}-${product.condition ?? 'no-condition'}`}>
                 <img src={`http://localhost:3003/media/${product.image}`} alt="product image" />
                 <h4>{product.name}</h4>
                 <div className="cart-page-product-price">
                   {product.discountPrice ? (
-                    <p><span>{product.normalPrice}€</span> {product.discountPrice}€</p>
+                    <p><span className='discount-span'>{product.formattedNormal}€</span>{product.formattedDiscount}€</p>
                   ) : (
                     <p>{product.normalPrice}€</p>
                   )}
                 </div>
-                <ProductControl item={product} />
-                {product.discountPrice ? (
-                  <p>{calcProductTotal(product.discountPrice, product.amount)}€</p>
-                ) : (
-                  <p>{calcProductTotal(product.normalPrice, product.amount)}€</p>
-                )}
+                <div className="cart-page-price-control">
+                  <ProductControl item={product} />
+                  <p>Total: {product.formattedTotal}€</p>
+                </div>
               </div>
             ))
           ) : (
@@ -61,11 +71,11 @@ const CartPage = () => {
           <h3>Cart</h3>
           <div className="summary-row">
             <h4>Subtotal</h4>
-            <h4>{calcCartSubtotal()}€</h4>
+            <h4>{formatPrice(calcCartSubtotal())}€</h4>
           </div>
           <div className="summary-row">
             <h4>Total</h4>
-            <h4>{calcCartTotal()}€</h4>
+            <h4>{formatPrice(calcCartTotal())}€</h4>
           </div>
           <button className="summary-button">Checkout</button>
         </div>

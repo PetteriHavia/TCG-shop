@@ -66,6 +66,10 @@ button {
     display: inline;
     word-break: break-word;
 
+    &:last-child {
+      pointer-events: none;
+    }
+
     a {
       text-decoration: none;
       color: $metal-black;

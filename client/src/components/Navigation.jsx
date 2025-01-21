@@ -8,6 +8,7 @@ import { useGetAllCategoriesQuery } from '../redux/reducers/apiSlice'
 import { useRef, useEffect } from "react";
 import CartPreview from "./CartPreview";
 import useScreenSize from "../hooks/useScreenSize";
+import Logo from "../assets/images/site_logo.png"
 
 const Navigation = () => {
   const [toggle, setToggle] = useState(false)
@@ -88,7 +89,7 @@ const Navigation = () => {
       <div className="container-md">
         <IconContext.Provider value={{ size: "2rem" }} >
           <div className="menu" ref={menuRef}>
-            <img src="#" alt="Logo" />
+            <img src={Logo} alt="Logo" />
             <MdMenu className="menu-icon" onClick={() => setIsOpen(true)} />
             {!isLoading ?
               <ul className={isOpen ? "is-active" : ""}>

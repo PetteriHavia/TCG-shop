@@ -4,6 +4,7 @@ import { MdOutlineShoppingCart } from "react-icons/md"
 import { MdClose } from "react-icons/md";
 import { Link } from "react-router-dom"
 import ProductControl from "./ProductControl";
+import { formatPrice } from "../utils/calculateDicount";
 
 
 const CartPreview = () => {
@@ -60,7 +61,7 @@ const CartPreview = () => {
                       <div className="cart-item-action">
                         <ProductControl item={item} />
                         <div className="cart-item-price">
-                          <p>{item.discountPrice ? item.discountPrice : item.normalPrice}€</p>
+                          <p>{item.discountPrice ? formatPrice(item.discountPrice) : formatPrice(item.normalPrice)}€</p>
                         </div>
                       </div>
                     </div>
@@ -71,7 +72,7 @@ const CartPreview = () => {
             <div className="cart-footer">
               <div className="cart-total">
                 <p>{cart.length} products</p>
-                <p>Total: {calculateTotal()}€</p>
+                <p>Total: {formatPrice(calculateTotal())}€</p>
               </div>
               <Link to="/cart">
                 <button>Checkout</button>
