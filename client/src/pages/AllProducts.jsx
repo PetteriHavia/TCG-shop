@@ -6,23 +6,31 @@ import { useGetCategoryQuery } from "../redux/reducers/apiSlice";
 import ProductCard from "../components/ProductCard";
 import useScreenSize from "../hooks/useScreenSize";
 import PageNotFound from "../components/PageNotFound";
-import { useSelector } from "react-redux";
 import Footer from "../components/Footer";
 import GridControl from "../components/GridControl";
-
+import { useSearchParams } from "react-router-dom";
 
 const AllProducts = () => {
-  const filters = useSelector((state) => state.filters);
   const [filterToggle, setFilterToggle] = useState(false);
-  const [gridType, setGridType] = useState("product-grid");
   const [selectDropdownItem, setSelectDropdownItem] = useState("A - Z");
   const windowSize = useScreenSize();
   const { category, setName } = useParams();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams()
+
+
+  /*searchParam filter options */
+  const grid = searchParams.get("grid") || "product-grid"
+  const availability = searchParams.get("availability") || []
+  const type = searchParams.get("type") || []
+  const rarity = searchParams.get("rarity") || []
+  const status = searchParams.get("status") || []
+
+
 
   const { data: filterData, isLoading: isLoadingFilter } = useGetCategoryQuery({
     category: category || "all",
-    filters,
+    filters: { availability, type, rarity, status },
     setName,
   });
 
@@ -47,7 +55,6 @@ const AllProducts = () => {
     }
   }
 
-
   const sortData = useMemo(() => {
     if (!filterData) {
       return []
@@ -69,6 +76,17 @@ const AllProducts = () => {
     })
   }, [filterData, selectDropdownItem])
 
+  const handleFilterChange = (key, value) => {
+    console.log(searchParams)
+    const newParams = new URLSearchParams(searchParams);
+    if (!value || Array.isArray(value) && value.length === 0) {
+      newParams.delete(key)
+    } else {
+      newParams.set(key, Array.isArray(value) ? value.join(",") : value)
+    }
+    setSearchParams(newParams);
+  }
+
   return (
     <>
       <section className="container-md">
@@ -81,8 +99,8 @@ const AllProducts = () => {
               <h2>{headerText}</h2>
             </div>
             <GridControl
-              gridType={gridType}
-              setGridType={setGridType}
+              grid={grid}
+              setSearchParams={setSearchParams}
               selectDropdownItem={selectDropdownItem}
               setSelectDropdownItem={setSelectDropdownItem}
               filterData={filterData}
@@ -92,6 +110,9 @@ const AllProducts = () => {
             )}
             <div className="search-layout">
               <Filter
+                setSearchParams={setSearchParams}
+                handleFilterChange={handleFilterChange}
+                searchParams={searchParams}
                 filterToggle={filterToggle}
                 setFilterToggle={setFilterToggle}
                 setName={setName}
@@ -101,7 +122,7 @@ const AllProducts = () => {
               ) : filterData && filterData.length === 0 ? (
                 <div>No products available</div>
               ) : (
-                <div className={gridType}>
+                <div className={grid}>
                   <React.Fragment key={filterData.id}>
                     {sortData.map((product) => (
                       <ProductCard

@@ -1,6 +1,6 @@
 import { FiGrid, FiList } from "react-icons/fi";
 
-const GridControl = ({ gridType, setGridType, setSelectDropdownItem }) => {
+const GridControl = ({ grid, setSelectDropdownItem, setSearchParams }) => {
 
   const gridOptions = [
     { type: 'product-grid', icon: <FiGrid /> },
@@ -17,15 +17,14 @@ const GridControl = ({ gridType, setGridType, setSelectDropdownItem }) => {
     setSelectDropdownItem(e.target.value)
   }
 
-
   return (
     <div className="grid-control-container">
       <div className="grid-template-control">
         {gridOptions.map((item) => (
           <button
             key={item.type}
-            className={`grid-type ${gridType === item.type ? "active" : ""}`}
-            onClick={() => setGridType(item.type)}
+            className={`grid-type ${grid === item.type ? "active" : ""}`}
+            onClick={() => setSearchParams(prev => { prev.set("grid", item.type); return prev })}
           >
             <span>{item.icon}</span>
           </button>
